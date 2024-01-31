@@ -10,9 +10,9 @@ namespace IdentityManagerServerApi.Data
 
         private readonly string connectionString;
 
-        public AppDbContext(string _serverName, string _dataBaseName, string _userId, string _password)
+        public AppDbContext()
         {
-            connectionString = "Server=abdo; Database=CustomDemoIdentityDb; Trusted_Connection=True; Trust Server Certificate=True;";
+            connectionString = "Server=abdo; Database=GraduationProject; Trusted_Connection=True; Trust Server Certificate=True;";
         }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
@@ -20,10 +20,7 @@ namespace IdentityManagerServerApi.Data
         {
         }
 
-        public AppDbContext()
-        {
-        }
-
+      
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Patient> Patients { get; set; }
