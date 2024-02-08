@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityManagerServerApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240207063848_AddCharacters")]
+    [Migration("20240208044419_AddCharacters")]
     partial class AddCharacters
     {
         /// <inheritdoc />
@@ -235,6 +235,9 @@ namespace IdentityManagerServerApi.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UniversitAddress")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UniversityName")

@@ -6,7 +6,7 @@ namespace IdentityManagerServerApi.Data
     {
         public string? Name { get; set; }
 
-        public DateTime? TimeAddUser { get; set; } = DateTime.Now; 
+        public DateTime? TimeAddUser { get; set; }
 
     }
 }

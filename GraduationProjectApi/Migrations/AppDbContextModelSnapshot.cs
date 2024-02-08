@@ -234,6 +234,9 @@ namespace IdentityManagerServerApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UniversitAddress")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UniversityName")
                         .HasColumnType("nvarchar(max)");
 

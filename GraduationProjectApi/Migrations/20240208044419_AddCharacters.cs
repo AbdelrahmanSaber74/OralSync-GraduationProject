@@ -76,6 +76,7 @@ namespace IdentityManagerServerApi.Migrations
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UniversityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UniversitAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GPA = table.Column<double>(type: "float", nullable: true),
                     AcademicYear = table.Column<int>(type: "int", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),

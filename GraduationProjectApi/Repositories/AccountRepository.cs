@@ -26,8 +26,11 @@ namespace IdentityManagerServerApi.Repositories
                 Name = userDTO.Name,
                 Email = userDTO.Email,
                 PasswordHash = userDTO.Password,
-                UserName = userDTO.Email
-            };
+                UserName = userDTO.Email,
+                PhoneNumber = userDTO.PhoneNumber,
+                TimeAddUser = DateTime.Now,
+
+        };
             var user = await userManager.FindByEmailAsync(newUser.Email);
             if (user is not null) return new GeneralResponse(false, "User registered already");
 
