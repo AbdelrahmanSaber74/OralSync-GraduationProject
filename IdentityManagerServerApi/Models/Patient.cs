@@ -8,10 +8,7 @@ public class Patient
     public int PatientId { get; set; }
 
     [Required]
-    public string FirstName { get; set; }
-    [Required]
-
-    public string LastName { get; set; }
+    public string Name { get; set; }
 
     [Required]
     public bool IsMale { get; set; }
@@ -19,11 +16,13 @@ public class Patient
     [Required]
     public string Email { get; set; }
 
+    [Required]
     public string PhoneNumber { get; set; }
 
-    public List<string>? Address { get; set; }
+    [Required]
+    public string Address { get; set; }
 
-    public string? InsuranceCompany { get; set; }
+    public string InsuranceCompany { get; set; }
 
     [Required]
     public DateTime BirthDate { get; set; }

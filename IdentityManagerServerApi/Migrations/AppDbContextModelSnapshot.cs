@@ -105,35 +105,35 @@ namespace IdentityManagerServerApi.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Certificates")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClinicAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClinicNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("GPA")
+                    b.Property<double>("GPA")
                         .HasColumnType("float");
 
-                    b.Property<DateTime?>("GraduationDate")
+                    b.Property<DateTime>("GraduationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("InsuranceCompanies")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsMale")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -142,6 +142,7 @@ namespace IdentityManagerServerApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UniversityName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -162,6 +163,7 @@ namespace IdentityManagerServerApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PatientId"));
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("BirthDate")
@@ -171,17 +173,14 @@ namespace IdentityManagerServerApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("InsuranceCompany")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsMale")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -205,7 +204,7 @@ namespace IdentityManagerServerApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
 
-                    b.Property<int?>("AcademicYear")
+                    b.Property<int>("AcademicYear")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("BirthDate")
@@ -215,18 +214,14 @@ namespace IdentityManagerServerApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("GPA")
+                    b.Property<double>("GPA")
                         .HasColumnType("float");
 
                     b.Property<bool?>("IsMale")
                         .IsRequired()
                         .HasColumnType("bit");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -235,6 +230,7 @@ namespace IdentityManagerServerApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UniversityName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")

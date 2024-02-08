@@ -68,11 +68,19 @@ builder.Services.AddScoped<IUserAccount, AccountRepository>();
 //Ending...
 var app = builder.Build();
 
-
-app.UseSwagger();
-app.UseSwaggerUI();
-
-app.UseHttpsRedirection();
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.UseCors(policy =>
+    {
+        policy.WithOrigins("http://localhost:7254", "https://localhost:7254")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .WithHeaders(HeaderNames.ContentType);
+    });
+}
 
 app.UseHttpsRedirection();
 

@@ -6,12 +6,13 @@ namespace IdentityManagerServerApi.Data
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
+        // Your additional properties...
 
         private readonly string connectionString;
 
         public AppDbContext()
         {
-            connectionString = "Data Source=SQL8005.site4now.net;Initial Catalog=db_aa4b69_graduationproject;User Id=db_aa4b69_graduationproject_admin;Password=Data Source=SQL8005.site4now.net;Initial Catalog=db_aa4b69_graduationproject;User Id=db_aa4b69_graduationproject_admin;Password=QxaN@qT23wLUL7t";
+            connectionString = "Server=abdo; Database=GraduationProject; Trusted_Connection=True; Trust Server Certificate=True;";
         }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)

@@ -2,7 +2,6 @@
 using IdentityManagerServerApi.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SharedClassLibrary.Contracts;
 using SharedClassLibrary.DTOs;
@@ -86,8 +85,6 @@ namespace IdentityManagerServerApi.Repositories
 
 
         }
-
-       
 
         public async Task<LoginResponse> LoginAccount(LoginDTO loginDTO)
         {
