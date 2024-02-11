@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using IdentityManagerServerApi.Models;
+using GraduationProjectApi.Models;
 
 namespace IdentityManagerServerApi.Data
 {
@@ -19,10 +20,13 @@ namespace IdentityManagerServerApi.Data
         {
         }
 
-      
+
+
+
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<Post> Posts { get; set; }
 
 
 
@@ -39,7 +43,21 @@ namespace IdentityManagerServerApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Your additional model configurations...
+
+
+
+
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.User)        // A post has one user
+                .WithMany(u => u.Posts)     // A user can have many posts
+                .HasForeignKey(p => p.UserId) // Define foreign key relationship
+                .IsRequired();              // Make UserId required
+
+
+
+
+
+
         }
     }
 }
