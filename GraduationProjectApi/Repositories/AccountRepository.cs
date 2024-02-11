@@ -19,7 +19,6 @@ namespace IdentityManagerServerApi.Repositories
         {
 
 
-
             if (userDTO is null) return new GeneralResponse(false, "Model is empty");
             var newUser = new ApplicationUser()
             {
@@ -35,7 +34,10 @@ namespace IdentityManagerServerApi.Repositories
             if (user is not null) return new GeneralResponse(false, "User registered already");
 
             var createUser = await userManager.CreateAsync(newUser!, userDTO.Password);
-            if (!createUser.Succeeded) return new GeneralResponse(false, "Error occured.. please try again");
+           if (!createUser.Succeeded) return new GeneralResponse(false, "Error occured.. please try again");
+
+
+
 
             //Assign Default Role : Admin to first registrar; rest is user
             var checkAdmin = await roleManager.FindByNameAsync("Admin");
@@ -90,8 +92,7 @@ namespace IdentityManagerServerApi.Repositories
 
         }
 
-       
-
+     
         public async Task<LoginResponse> LoginAccount(LoginDTO loginDTO)
         {
             if (loginDTO == null)
