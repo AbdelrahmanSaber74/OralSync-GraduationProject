@@ -37,11 +37,11 @@ public class Doctor
 
     public List<string>? Certificates { get; set; }
 
-    public DateTime? GraduationDate { get; set; }
+    public string? GraduationDate { get; set; }
 
 
     [Required]  
-    public DateTime BirthDate { get; set; }
+    public string BirthDate { get; set; }
 
     [Required]
     public string UserId { get; set; }

@@ -35,7 +35,7 @@ public class Student
 
 
     [Required]
-    public DateTime BirthDate { get; set; }
+    public string BirthDate { get; set; }
 
     [Required]
     public string UserId { get; set; }

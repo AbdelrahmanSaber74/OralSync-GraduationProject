@@ -13,6 +13,14 @@ namespace GraduationProjectApi.Models
         [Required]
         public string Content { get; set; }
 
+
+        public string DateCreated { get; set; }
+        public string TimeCreated { get; set; }
+
+        public string DateUpdated { get; set; }
+        public string TimeUpdated { get; set; }
+
+
         [Required]
         public string UserId { get; set; }
 

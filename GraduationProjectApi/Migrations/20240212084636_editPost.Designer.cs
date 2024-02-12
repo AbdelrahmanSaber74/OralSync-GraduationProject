@@ -4,6 +4,7 @@ using IdentityManagerServerApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityManagerServerApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240212084636_editPost")]
+    partial class editPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +94,6 @@ namespace IdentityManagerServerApi.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
@@ -114,7 +116,7 @@ namespace IdentityManagerServerApi.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("TimeAddUser")
+                    b.Property<DateTime?>("TimeAddUser")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -145,9 +147,8 @@ namespace IdentityManagerServerApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DoctorId"));
 
-                    b.Property<string>("BirthDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Certificates")
                         .HasColumnType("nvarchar(max)");
@@ -169,8 +170,8 @@ namespace IdentityManagerServerApi.Migrations
                     b.Property<double?>("GPA")
                         .HasColumnType("float");
 
-                    b.Property<string>("GraduationDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("GraduationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("InsuranceCompanies")
                         .HasColumnType("nvarchar(max)");
@@ -209,9 +210,8 @@ namespace IdentityManagerServerApi.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BirthDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -254,9 +254,8 @@ namespace IdentityManagerServerApi.Migrations
                     b.Property<int?>("AcademicYear")
                         .HasColumnType("int");
 
-                    b.Property<string>("BirthDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()

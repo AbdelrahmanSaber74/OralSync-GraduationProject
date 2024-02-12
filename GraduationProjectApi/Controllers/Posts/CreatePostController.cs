@@ -4,6 +4,7 @@ using IdentityManagerServerApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharedClassLibrary.Helper;
 using SharedClassLibrary.DTOs;
 using System;
 using System.Security.Claims;
@@ -40,7 +41,11 @@ namespace GraduationProjectApi.Controllers.Post
                 {
                     Title =postDto.Title,
                     Content = postDto.Content,
-                    UserId = userId
+                    UserId = userId,
+                    DateCreated = DateTimeHelper.FormatDate(DateTime.Now),
+                    TimeCreated = DateTimeHelper.FormatTime(DateTime.Now),
+                    DateUpdated = "",
+                    TimeUpdated = "" ,
                 };
 
                 // Add post to database

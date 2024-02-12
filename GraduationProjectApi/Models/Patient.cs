@@ -26,7 +26,7 @@ public class Patient
     public string? InsuranceCompany { get; set; }
 
     [Required]
-    public DateTime BirthDate { get; set; }
+    public string BirthDate { get; set; }
     public string? UserId { get; set; }
 
 

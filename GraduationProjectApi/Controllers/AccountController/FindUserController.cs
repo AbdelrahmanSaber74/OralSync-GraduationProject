@@ -38,13 +38,13 @@ namespace IdentityManagerServerApi.Controllers
             switch (userRole)
             {
                 case "Doctor":
-                    resultQuery = _db.Doctors.Where(m => m.UserId == userId).Select(m => new {m.FirstName , m.LastName  , m.IsMale , m.UserId});
+                    resultQuery = _db.Doctors.Where(m => m.UserId == userId).Select(m => new {m.FirstName , m.LastName , m.IsMale , m.PhoneNumber , m.Email , m.UniversityName , m.GPA , m.ClinicAddress , m.ClinicNumber , m.InsuranceCompanies , m.Certificates , m.GraduationDate , m.BirthDate   });
                     break;
                 case "Student":
-                    resultQuery = _db.Students.Where(m => m.UserId == userId).Select(m => new { m.FirstName, m.LastName, m.IsMale, m.UserId }); 
+                    resultQuery = _db.Students.Where(m => m.UserId == userId).Select(m => new { m.FirstName, m.LastName, m.IsMale, m.PhoneNumber , m.Email , m.UniversityName , m.UniversitAddress , m.GPA , m.AcademicYear , m.BirthDate }); 
                     break;
                 case "Patient":
-                    resultQuery = _db.Patients.Where(m => m.UserId == userId).Select(m => new { m.FirstName, m.LastName, m.IsMale, m.UserId }); 
+                    resultQuery = _db.Patients.Where(m => m.UserId == userId).Select(m => new { m.FirstName, m.LastName, m.IsMale,   m.Email , m.PhoneNumber , m.Address, m.InsuranceCompany, m.BirthDate }); 
                     break;
                 case "Admin":
                     resultQuery = _db.Users.Where(m => m.Id == userId).Select(m => new { m.Id , m.Name }); 

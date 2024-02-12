@@ -36,16 +36,39 @@ namespace GraduationProjectApi.Controllers.Students
             if (userRole == "Doctor")
             {
                 var doctor = await _db.Doctors.FirstOrDefaultAsync(x => x.UserId == userId);
+                var userDoctor = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
                 if (doctor == null)
                 {
                     return NotFound(new { StatusCode = 404, Message = "Doctor not found." });
                 }
 
-                // Example update to GPA
+                // update Doctor In table Doctor
                 doctor.GPA = doctorDTO.GPA;
                 doctor.PhoneNumber = doctorDTO.PhoneNumber;
-               
+                doctor.FirstName = doctorDTO.FirstName;
+                doctor.LastName = doctorDTO.LastName;
+                doctor.Email = doctorDTO.Email;
+                doctor.IsMale = doctorDTO.IsMale;
+                doctor.UniversityName = doctorDTO.UniversityName;
+                doctor.ClinicAddress = doctorDTO.ClinicAddress;
+                doctor.ClinicNumber = doctorDTO.ClinicNumber;
+                doctor.InsuranceCompanies = doctorDTO.InsuranceCompanies;
+                doctor.Certificates = doctorDTO.Certificates;
+                doctor.BirthDate = doctorDTO.BirthDate;
+                doctor.GraduationDate = doctorDTO.GraduationDate;
+
+
+
+                // update Doctor In table Users
+                userDoctor.Name = doctorDTO.FirstName+" "+doctorDTO.LastName;
+                userDoctor.UserName = doctorDTO.Email;
+                userDoctor.NormalizedUserName = doctorDTO.Email.ToUpper();
+                userDoctor.Email = doctorDTO.Email;
+                userDoctor.NormalizedEmail = doctorDTO.Email.ToUpper();
+                userDoctor.PhoneNumber = doctorDTO.PhoneNumber;
+
+
 
                 _db.Update(doctor);
                 await _db.SaveChangesAsync();

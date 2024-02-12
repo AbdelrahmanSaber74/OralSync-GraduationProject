@@ -13,7 +13,7 @@ namespace SharedClassLibrary.DTOs
         public string PhoneNumber { get; set; }
         public List<string>? Address { get; set; }
         public string? InsuranceCompany { get; set; }
-        public DateTime BirthDate { get; set; }
+        public string BirthDate { get; set; }
 
 
     }
