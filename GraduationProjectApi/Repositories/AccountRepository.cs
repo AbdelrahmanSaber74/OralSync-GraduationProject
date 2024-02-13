@@ -92,7 +92,92 @@ namespace IdentityManagerServerApi.Repositories
 
         }
 
-     
+
+        public async Task<GeneralResponse> CreateAccountSpecial(SpecialDTO specialDTO)
+        {
+            if (specialDTO is null)
+                return new GeneralResponse(false, "Model is empty");
+
+            var newUser = new ApplicationUser()
+            {
+                Name = specialDTO.FirstName +"_"+specialDTO.LastName,
+                Email = specialDTO.Email,
+                PasswordHash = specialDTO.Password,
+                UserName = specialDTO.Email,
+                PhoneNumber = specialDTO.PhoneNumber,
+                TimeAddUser = DateTime.Now,
+            };
+
+
+
+            var user = await userManager.FindByEmailAsync(newUser.Email);
+            if (user is not null) return new GeneralResponse(false, "User registered already");
+
+            var createUser = await userManager.CreateAsync(newUser!, specialDTO.Password);
+            if (!createUser.Succeeded) return new GeneralResponse(false, "Error occured.. please try again");
+
+
+
+            //Assign Default Role : Admin to first registrar; rest is user
+            var checkAdmin = await roleManager.FindByNameAsync("Admin");
+            if (checkAdmin is null)
+            {
+                await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
+                await userManager.AddToRoleAsync(newUser, "Admin");
+                return new GeneralResponse(true, "Account Created");
+            }
+
+
+            else if (specialDTO.IsDoctor)
+            {
+                var checkUser = await roleManager.FindByNameAsync("Doctor");
+                if (checkUser is null)
+                    await roleManager.CreateAsync(new IdentityRole() { Name = "Doctor" });
+
+
+                await userManager.AddToRoleAsync(newUser, "Doctor");
+                return new GeneralResponse(true, "Account Created");
+            }
+            else if (specialDTO.IsStudent)
+            {
+                var checkUser = await roleManager.FindByNameAsync("Student");
+                if (checkUser is null)
+                    await roleManager.CreateAsync(new IdentityRole() { Name = "Student" });
+
+                await userManager.AddToRoleAsync(newUser, "Student");
+                return new GeneralResponse(true, "Account Created");
+            }
+
+            else if (specialDTO.IsPatient)
+            {
+                var checkUser = await roleManager.FindByNameAsync("Patient");
+                if (checkUser is null)
+                    await roleManager.CreateAsync(new IdentityRole() { Name = "Patient" });
+
+                await userManager.AddToRoleAsync(newUser, "Patient");
+                return new GeneralResponse(true, "Account Created");
+            }
+
+
+            else
+            {
+
+                return new GeneralResponse(false, "Account Not Created Please Select User");
+
+            }
+
+
+        }
+
+
+
+        //CreateAccountSpecial//////////////////
+
+
+
+
+
+
         public async Task<LoginResponse> LoginAccount(LoginDTO loginDTO)
         {
             if (loginDTO == null)

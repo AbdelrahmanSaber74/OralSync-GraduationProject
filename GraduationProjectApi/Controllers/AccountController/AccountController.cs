@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.Contracts;
 using SharedClassLibrary.DTOs;
+using SharedClassLibrary.Helper;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 namespace IdentityManagerServerApi.Controllers.AccountController
@@ -12,15 +13,17 @@ namespace IdentityManagerServerApi.Controllers.AccountController
     [ApiController]
     public class AccountController : ControllerBase
     {
-        AppDbContext _db = new AppDbContext();
 
 
         private readonly IUserAccount _userAccount;
+        private readonly AppDbContext _db;
 
-            public AccountController(IUserAccount userAccount)
-            {
-                _userAccount = userAccount;
-            }
+        public AccountController(IUserAccount userAccount , AppDbContext db)
+        {
+            _userAccount = userAccount;
+            _db = db;
+
+        }
 
 
         [HttpPost("register")]
@@ -105,6 +108,12 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                     resultQuery = _db.Users.Where(m => m.Id == userId).Select(m => new { m.Id, m.Name });
                     break;
                 default: break;
+            }
+
+            if (resultQuery == null)
+            {
+                return BadRequest(new { StatusCode = 400, Message = "Error retrieving resultQuery" });
+
             }
 
             return await resultQuery.FirstOrDefaultAsync(); // Await here

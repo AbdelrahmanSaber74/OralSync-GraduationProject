@@ -51,10 +51,10 @@ namespace IdentityManagerServerApi.Controllers
                 _db.Doctors.Add(newDoctor);
                 _db.SaveChanges();
 
-                return Ok(new { message = "Doctor added successfully." });
+                return Ok(new { StatusCode = 200, message = "Doctor added successfully." });
             }
 
-            return BadRequest(new { errors = "Invalid request or not a doctor." });
+            return BadRequest(new { StatusCode = 400, message = "Invalid request or not a doctor." });
         }
     }
 }

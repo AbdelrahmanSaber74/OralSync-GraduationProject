@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using IdentityManagerServerApi.Models;
 using GraduationProjectApi.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace IdentityManagerServerApi.Data
 {
@@ -47,6 +48,7 @@ namespace IdentityManagerServerApi.Data
 
 
 
+
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.User)        // A post has one user
                 .WithMany(u => u.Posts)     // A user can have many posts
@@ -61,3 +63,4 @@ namespace IdentityManagerServerApi.Data
         }
     }
 }
+    

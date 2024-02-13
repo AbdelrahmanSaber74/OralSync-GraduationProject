@@ -45,12 +45,12 @@ namespace IdentityManagerServerApi.Controllers
                 db.Patients.Add(newPatient);
                 db.SaveChanges();
 
-                return Ok(new { message = "Patient added successfully." });
+                return Ok(new { StatusCode = 200 ,  message = "Patient added successfully." });
             }
 
 
 
-            return BadRequest(new { message = "Invalid role." });
+            return BadRequest(new { StatusCode = 400 ,  message = "Invalid role." });
         }
 
        

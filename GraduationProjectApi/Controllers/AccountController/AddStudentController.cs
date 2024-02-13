@@ -43,11 +43,11 @@ namespace IdentityManagerServerApi.Controllers
                 db.Students.Add(newStudent);
                 db.SaveChanges();
 
-                return Ok(new { message = "Student added successfully." });
+                return Ok(new { StatusCode = 200, message = "Student added successfully." });
              
             }
 
-            return BadRequest(new { message = "Invalid role." });
+            return BadRequest(new { StatusCode = 400, message = "Invalid role." });
         }
 
        
