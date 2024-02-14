@@ -130,7 +130,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 PhoneNumber = specialDTO.PhoneNumber,
                 Email = specialDTO.Email,
                 UniversityName = specialDTO.UniversityName,
-                UniversitAddress = specialDTO.UniversitAddress,
+                UniversitAddress = specialDTO.UniversityAddress,
                 AcademicYear = specialDTO.AcademicYear,
                 GPA = specialDTO.GPA,
                 BirthDate = specialDTO.BirthDate,

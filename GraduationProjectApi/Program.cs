@@ -52,6 +52,17 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
+
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Doctor", policy =>
+        policy.RequireRole("Doctor").Build());
+});
+
+
+
 //Add authentication to Swagger UI
 builder.Services.AddSwaggerGen(options =>
 {

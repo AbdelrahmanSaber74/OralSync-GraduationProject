@@ -56,7 +56,7 @@ namespace GraduationProjectApi.Controllers.Students
                 student.PhoneNumber = studentDTO.PhoneNumber;
                 student.Email = studentDTO.Email;
                 student.UniversityName = studentDTO.UniversityName;
-                student.UniversitAddress = studentDTO.UniversitAddress;
+                student.UniversitAddress = studentDTO.UniversityAddress;
                 student.GPA = studentDTO.GPA;
                 student.AcademicYear = studentDTO.AcademicYear;
                 student.BirthDate = studentDTO.BirthDate;
