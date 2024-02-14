@@ -31,7 +31,7 @@ namespace GraduationProjectApi.Controllers.Students
             var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userRole))
-                return BadRequest(new { StatusCode = 400, Message = "User ID or Role not found in claims." });
+                return StatusCode(StatusCodes.Status400BadRequest, new { StatusCode = 400, MessageEn = "User ID or Role not found in claims.", MessageAr = "لم يتم العثور على معرف المستخدم أو الدور في البيانات." });
 
             if (userRole == "Doctor")
             {
@@ -40,28 +40,28 @@ namespace GraduationProjectApi.Controllers.Students
 
                 if (doctor == null)
                 {
-                    return NotFound(new { StatusCode = 404, Message = "Doctor not found." });
+                    return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "Doctor not found.", MessageAr = "الطبيب غير موجود." });
                 }
 
                 // update Doctor In table Doctor
-                doctor.GPA = doctorDTO.GPA;
-                doctor.PhoneNumber = doctorDTO.PhoneNumber;
                 doctor.FirstName = doctorDTO.FirstName;
                 doctor.LastName = doctorDTO.LastName;
-                doctor.Email = doctorDTO.Email;
                 doctor.IsMale = doctorDTO.IsMale;
+                doctor.PhoneNumber = doctorDTO.PhoneNumber;
+                doctor.Email = doctorDTO.Email;
                 doctor.UniversityName = doctorDTO.UniversityName;
+                doctor.GPA = doctorDTO.GPA;
                 doctor.ClinicAddress = doctorDTO.ClinicAddress;
                 doctor.ClinicNumber = doctorDTO.ClinicNumber;
                 doctor.InsuranceCompanies = doctorDTO.InsuranceCompanies;
                 doctor.Certificates = doctorDTO.Certificates;
-                doctor.BirthDate = doctorDTO.BirthDate;
                 doctor.GraduationDate = doctorDTO.GraduationDate;
+                doctor.BirthDate = doctorDTO.BirthDate;
 
 
 
                 // update Doctor In table Users
-                userDoctor.Name = doctorDTO.FirstName+" "+doctorDTO.LastName;
+                userDoctor.Name = doctorDTO.FirstName+"_"+doctorDTO.LastName;
                 userDoctor.UserName = doctorDTO.Email;
                 userDoctor.NormalizedUserName = doctorDTO.Email.ToUpper();
                 userDoctor.Email = doctorDTO.Email;
@@ -73,11 +73,11 @@ namespace GraduationProjectApi.Controllers.Students
                 _db.Update(doctor);
                 await _db.SaveChangesAsync();
 
-                return Ok(new { StatusCode = 200, Message = "Doctor profile updated successfully." });
+                return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Doctor profile updated successfully.", MessageAr = "تم تحديث ملف الطبيب بنجاح." });
             }
 
 
-            return Forbid(); // User is not a Doctor, so forbid the action.
+            return StatusCode(StatusCodes.Status403Forbidden, new { StatusCode = 403, MessageEn = "User is not a Doctor, so forbid the action", MessageAr = "المستخدم ليس طبيب ، لذلك يتم منع الإجراء" });
 
         }
     }

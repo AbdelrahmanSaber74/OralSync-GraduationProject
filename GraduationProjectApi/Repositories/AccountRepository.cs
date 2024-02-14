@@ -93,7 +93,7 @@ namespace IdentityManagerServerApi.Repositories
         }
 
 
-        public async Task<GeneralResponse> CreateAccountSpecial(SpecialDTO specialDTO)
+            public async Task<GeneralResponse> CreateAccountSpecial(SpecialDTO specialDTO)
         {
             if (specialDTO is null)
                 return new GeneralResponse(false, "Model is empty");

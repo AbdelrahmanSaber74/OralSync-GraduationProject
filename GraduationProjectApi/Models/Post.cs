@@ -1,4 +1,5 @@
 ﻿using IdentityManagerServerApi.Data;
+using IdentityManagerServerApi.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace GraduationProjectApi.Models
@@ -26,5 +27,14 @@ namespace GraduationProjectApi.Models
 
         // Navigation property for the user who authored the post
         public ApplicationUser User { get; set; }
+
+
+        public virtual ICollection<Comment> Comments { get; set; }
+
+        // Navigation property for likes related to this post
+        public virtual ICollection<Like> Likes { get; set; }
+
+
+
     }
 }

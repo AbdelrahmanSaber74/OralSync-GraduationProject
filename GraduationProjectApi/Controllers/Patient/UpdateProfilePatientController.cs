@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.DTOs;
 using System.Linq;
+using System.Numerics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -31,29 +32,47 @@ namespace GraduationProjectApi.Controllers.Students
             var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userRole))
-                return BadRequest(new { StatusCode = 400, Message = "User ID or Role not found in claims." });
+                return StatusCode(StatusCodes.Status400BadRequest, new { StatusCode = 400, MessageEn = "User ID or Role not found in claims.", MessageAr = "لم يتم العثور على معرف المستخدم أو الدور في البيانات." });
 
             if (userRole == "Patient")
             {
                 var patient = await _db.Patients.FirstOrDefaultAsync(x => x.UserId == userId);
+                var userPatient = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
                 if (patient == null)
                 {
-                    return NotFound(new { StatusCode = 404, Message = "Patient not found." });
+                    return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "Patient not found.", MessageAr = "لم يتم العثور على المريض." });
                 }
 
-                // Example update to GPA
+
+                // update patient In table patient
                 patient.FirstName = patientDTO.FirstName;
-               
+                patient.LastName = patientDTO.LastName;
+                patient.IsMale = patientDTO.IsMale;
+                patient.Email = patientDTO.Email;
+                patient.PhoneNumber = patientDTO.PhoneNumber;
+                patient.Address = patientDTO.Address;
+                patient.InsuranceCompany = patientDTO.InsuranceCompany;
+                patient.BirthDate = patientDTO.BirthDate;
+
+
+                // update patient In table Users
+                userPatient.Name = patientDTO.FirstName+"_"+patientDTO.LastName;
+                userPatient.UserName = patientDTO.Email;
+                userPatient.NormalizedUserName = patientDTO.Email.ToUpper();
+                userPatient.Email = patientDTO.Email;
+                userPatient.NormalizedEmail = patientDTO.Email.ToUpper();
+                userPatient.PhoneNumber = patientDTO.PhoneNumber;
 
                 _db.Update(patient);
                 await _db.SaveChangesAsync();
 
-                return Ok(new { StatusCode = 200, Message = "Patient profile updated successfully." });
+                return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Patient profile updated successfully.", MessageAr = "تم تحديث ملف المريض بنجاح." });
+
             }
 
 
-            return Forbid(); // User is not a Patient, so forbid the action.
+            return StatusCode(StatusCodes.Status403Forbidden, new { StatusCode = 403, MessageEn = "User is not a Patient, so forbid the action", MessageAr = "المستخدم ليس مريض ، لذلك يتم منع الإجراء" });
 
         }
     }

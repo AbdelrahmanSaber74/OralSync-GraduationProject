@@ -32,6 +32,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
 
             var response = await _userAccount.CreateAccountSpecial(specialDTO);
 
+
             if (!response.Flag)
             {
                 return BadRequest(response);
@@ -48,8 +49,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
 
             if (lastUserId == null)
             {
-                return BadRequest(new { StatusCode = 400, MessageEn = "User ID not found.", MessageAr = "لم يتم العثور على معرف المستخدم." });
-
+                return StatusCode(StatusCodes.Status400BadRequest,new { StatusCode = 400 , MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم." });
             }
 
             if (specialDTO.IsDoctor)

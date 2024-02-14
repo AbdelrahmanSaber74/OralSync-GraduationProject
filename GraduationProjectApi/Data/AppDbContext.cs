@@ -29,6 +29,8 @@ namespace IdentityManagerServerApi.Data
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Post> Posts { get; set; }
 
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Like> Likes { get; set; }
 
 
 
@@ -48,6 +50,7 @@ namespace IdentityManagerServerApi.Data
 
 
 
+            // One-to-many relationship between User and Post
 
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.User)        // A post has one user
@@ -57,10 +60,22 @@ namespace IdentityManagerServerApi.Data
 
 
 
+            // One-to-many relationship between Post and Comment
+            modelBuilder.Entity<Comment>()
+            .HasOne(c => c.Post)
+            .WithMany(p => p.Comments)
+            .HasForeignKey(c => c.PostId)
+            .OnDelete(DeleteBehavior.Cascade); // If a post is deleted, delete its comments as well
+
+            // One-to-many relationship between Post and Like
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.Post)
+                .WithMany(p => p.Likes)
+                .HasForeignKey(l => l.PostId)
+                .OnDelete(DeleteBehavior.Cascade); // If a post is deleted, delete its likes as well
 
 
-
-        }
+            }
     }
 }
     
