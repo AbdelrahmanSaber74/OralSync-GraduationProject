@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.DTOs;
 using System.Linq;
-using System.Numerics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -24,28 +23,33 @@ namespace GraduationProjectApi.Controllers.Students
             _db = db;
         }
 
-        [HttpGet]
+        [HttpPut]
         [Authorize(Roles = "Student")]
-        public async Task<IActionResult> Get(StudentDTO studentDTO)
+        public async Task<IActionResult> Put(StudentDTO studentDTO)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userRole))
-                return StatusCode(StatusCodes.Status400BadRequest, new { StatusCode = 400, MessageEn = "User ID or Role not found in claims.", MessageAr = "لم يتم العثور على معرف المستخدم أو الدور في البيانات." });
-
-            if (userRole == "Student")
+            if (string.IsNullOrEmpty(userId))
             {
-                var student = await _db.Students.FirstOrDefaultAsync(x => x.UserId == userId);
-                var userstudent = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
+                return BadRequest(new { StatusCode = 400, MessageEn = "User ID not found in claims.", MessageAr = "معرف المستخدم غير موجود في البيانات." });
+            }
 
-                if (student == null)
-                {
-                    return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "Student not found.", MessageAr = "الطالب غير موجود." });
-                }
+            var student = await _db.Students.FirstOrDefaultAsync(x => x.UserId == userId);
+            var userstudent = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId); ;
 
+            if (student == null)
+            {
+                return NotFound(new { StatusCode = 404, MessageEn = "Student not found.", MessageAr = "الطالب غير موجود." });
+            }
 
-                // update student In table student
+            if (!User.IsInRole("Student"))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new { StatusCode = 403, MessageEn = "User is not a student, so forbid the action", MessageAr = "المستخدم ليس طالبًا، لذلك يتم منع الإجراء" });
+            }
+
+            try
+            {
+                // Update Student entity
                 student.FirstName = studentDTO.FirstName;
                 student.LastName = studentDTO.LastName;
                 student.IsMale = studentDTO.IsMale;
@@ -57,9 +61,7 @@ namespace GraduationProjectApi.Controllers.Students
                 student.AcademicYear = studentDTO.AcademicYear;
                 student.BirthDate = studentDTO.BirthDate;
 
-
-
-                // update student In table Users
+                // Update User entity
                 userstudent.Name = studentDTO.FirstName + "_" + studentDTO.LastName;
                 userstudent.UserName = studentDTO.Email;
                 userstudent.NormalizedUserName = studentDTO.Email.ToUpper();
@@ -71,12 +73,13 @@ namespace GraduationProjectApi.Controllers.Students
                 _db.Update(student);
                 await _db.SaveChangesAsync();
 
-                return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Student profile updated successfully.", MessageAr = "تم تحديث ملف الطالب بنجاح." });
+                return Ok(new { StatusCode = 200, MessageEn = "Student profile updated successfully.", MessageAr = "تم تحديث ملف الطالب بنجاح." });
             }
-
-            return StatusCode(StatusCodes.Status403Forbidden, new { StatusCode = 403, MessageEn = "User is not a student, so forbid the action", MessageAr = "المستخدم ليس طالبًا، لذلك يتم منع الإجراء" });
-
-
+            catch (DbUpdateException ex)
+            {
+                // Log the exception
+                return StatusCode(StatusCodes.Status500InternalServerError, new { StatusCode = 500, MessageEn = "An error occurred while updating the student profile.", MessageAr = "حدث خطأ أثناء تحديث ملف الطالب." });
+            }
         }
     }
 }
