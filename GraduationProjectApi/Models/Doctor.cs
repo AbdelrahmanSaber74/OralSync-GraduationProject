@@ -40,6 +40,9 @@ public class Doctor
     public string? GraduationDate { get; set; }
 
 
+
+
+
     [Required]  
     public string BirthDate { get; set; }
 

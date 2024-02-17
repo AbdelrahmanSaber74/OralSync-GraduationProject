@@ -44,10 +44,10 @@ namespace IdentityManagerServerApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+
+
             base.OnModelCreating(modelBuilder);
-
-
-
 
 
             // One-to-many relationship between User and Post
@@ -59,23 +59,25 @@ namespace IdentityManagerServerApi.Data
                 .IsRequired();              // Make UserId required
 
 
+               // One-to-many relationship between Post and Comment
 
-            // One-to-many relationship between Post and Comment
             modelBuilder.Entity<Comment>()
             .HasOne(c => c.Post)
             .WithMany(p => p.Comments)
             .HasForeignKey(c => c.PostId)
-            .OnDelete(DeleteBehavior.Cascade); // If a post is deleted, delete its comments as well
+            .OnDelete(DeleteBehavior.Restrict); // Restrict delete comments when the related post is deleted
 
             // One-to-many relationship between Post and Like
+
             modelBuilder.Entity<Like>()
                 .HasOne(l => l.Post)
                 .WithMany(p => p.Likes)
                 .HasForeignKey(l => l.PostId)
-                .OnDelete(DeleteBehavior.Cascade); // If a post is deleted, delete its likes as well
+                .OnDelete(DeleteBehavior.Restrict); // Restrict delete likes when the related post is deleted
 
 
-            }
+
+        }
     }
 }
     

@@ -46,13 +46,18 @@ namespace IdentityManagerServerApi.Controllers.AccountController
             if (userDetails == null)
             {
                 return StatusCode(StatusCodes.Status402PaymentRequired, new { StatusCode = 402, MessageEn = "Error retrieving user details", MessageAr = "خطأ في استرداد تفاصيل المستخدم" });
-            }   
+            }
+
+
+            string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+            var profileImage = _db.Users.Where(m=>m.Id == userId).Select(m=>m.ProfileImage).FirstOrDefault();
 
             return Ok(new
             {
                 response.Token,
                 userRole,
-                userDetails
+                userDetails,
+                profileImage = hosturl + profileImage
             });
         }
 
@@ -70,19 +75,20 @@ namespace IdentityManagerServerApi.Controllers.AccountController
         private async Task<object> getUserInformation(string userId, string userRole)
         {
 
+            string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
 
             IQueryable<object> resultQuery = null;
 
             switch (userRole)
             {
                 case "Doctor":
-                    resultQuery = _db.Doctors.Where(m => m.UserId == userId).Select(m => new { m.FirstName, m.LastName, m.IsMale, m.PhoneNumber, m.Email, m.UniversityName, m.GPA, m.ClinicAddress, m.ClinicNumber, m.InsuranceCompanies, m.Certificates, m.GraduationDate, m.BirthDate });
+                    resultQuery = _db.Doctors.Where(m => m.UserId == userId).Select(m => new { m.FirstName, m.LastName, m.IsMale, m.PhoneNumber, m.Email, m.UniversityName, m.GPA, m.ClinicAddress, m.ClinicNumber, m.InsuranceCompanies, m.Certificates, m.GraduationDate, m.BirthDate  });
                     break;
                 case "Student":
                     resultQuery = _db.Students.Where(m => m.UserId == userId).Select(m => new { m.FirstName, m.LastName, m.IsMale, m.PhoneNumber, m.Email, m.UniversityName, m.UniversitAddress, m.GPA, m.AcademicYear, m.BirthDate });
                     break;
                 case "Patient":
-                    resultQuery = _db.Patients.Where(m => m.UserId == userId).Select(m => new { m.FirstName, m.LastName, m.IsMale, m.Email, m.PhoneNumber, m.Address, m.InsuranceCompany, m.BirthDate });
+                    resultQuery = _db.Patients.Where(m => m.UserId == userId).Select(m => new { m.FirstName, m.LastName, m.IsMale, m.Email, m.PhoneNumber, m.Address, m.InsuranceCompany, m.BirthDate});
                     break;
                 case "Admin":
                     resultQuery = _db.Users.Where(m => m.Id == userId).Select(m => new { m.Id, m.Name });

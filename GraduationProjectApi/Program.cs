@@ -55,14 +55,6 @@ builder.Services.AddAuthentication(options =>
 
 
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("Doctor", policy =>
-        policy.RequireRole("Doctor").Build());
-});
-
-
-
 //Add authentication to Swagger UI
 builder.Services.AddSwaggerGen(options =>
 {
@@ -82,7 +74,7 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 app.UseHttpsRedirection();

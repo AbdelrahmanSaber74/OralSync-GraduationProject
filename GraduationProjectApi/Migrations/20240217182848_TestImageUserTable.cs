@@ -5,18 +5,24 @@
 namespace IdentityManagerServerApi.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateChar : Migration
+    public partial class TestImageUserTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.AddColumn<string>(
+                name: "ProfileImage",
+                table: "AspNetUsers",
+                type: "nvarchar(max)",
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.DropColumn(
+                name: "ProfileImage",
+                table: "AspNetUsers");
         }
     }
 }

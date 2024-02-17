@@ -9,5 +9,14 @@ namespace SharedClassLibrary.DTOs
 
         [Required(ErrorMessage = "Content is required.")]
         public string Content { get; set; }
+
+
+        [Required(ErrorMessage = "IsVisible is required.")]
+        public bool IsVisible { get; set; }
+
+        public string? Image { get; set; }
+
+
+
     }
 }

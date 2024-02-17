@@ -94,18 +94,23 @@ namespace IdentityManagerServerApi.Repositories
 
 
             public async Task<GeneralResponse> CreateAccountSpecial(SpecialDTO specialDTO)
-        {
+             {
             if (specialDTO is null)
                 return new GeneralResponse(false, "Model is empty");
 
+
+
+            string defaultImage = specialDTO.IsMale ? "male.png" : "female.png";
+
             var newUser = new ApplicationUser()
             {
-                Name = specialDTO.FirstName +"_"+specialDTO.LastName,
+                Name = specialDTO.FirstName + "_" + specialDTO.LastName,
                 Email = specialDTO.Email,
                 PasswordHash = specialDTO.Password,
                 UserName = specialDTO.Email,
                 PhoneNumber = specialDTO.PhoneNumber,
-                TimeAddUser = DateTime.Now,
+                ProfileImage = $"/Profile/default/{defaultImage}" ,
+                TimeAddUser = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time")),
             };
 
 
@@ -194,7 +199,7 @@ namespace IdentityManagerServerApi.Repositories
             var getUserRole = await userManager.GetRolesAsync(getUser);
             var userSession = new UserSession(getUser.Id, getUser.Name, getUser.Email, getUserRole.First());
             string token = GenerateToken(userSession);
-            return new LoginResponse(true, token!, "Login completed");
+            return new LoginResponse(true, token!,  "Login completed");
         }
 
         private string GenerateToken(UserSession user)
@@ -217,5 +222,22 @@ namespace IdentityManagerServerApi.Repositories
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
+        static DateTime GetTimeInEgypt()
+        {
+            // Get the time zone for Egypt
+            TimeZoneInfo egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
+
+            // Convert the current UTC time to Egypt time
+            DateTime timeInEgypt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, egyptTimeZone);
+
+            return timeInEgypt;
+        }
+
+
+
+
+
     }
 }

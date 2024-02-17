@@ -62,6 +62,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 return BadRequest(new { StatusCode = 400, Message = "Error retrieving user details" });
             }
 
+
             return Ok(new
             {
                 response.Token,

@@ -25,15 +25,13 @@ public class Like
     public string UserId { get; set; }
 
 
+
+
     // Foreign key property
     public int PostId { get; set; }
 
     // Navigation property for the post this like belongs to
-    [ForeignKey("PostId")]
     public virtual Post Post { get; set; }
-
-
-
 
 
 

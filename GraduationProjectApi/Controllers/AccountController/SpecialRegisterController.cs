@@ -13,8 +13,10 @@ namespace IdentityManagerServerApi.Controllers.AccountController
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class SpecialRegisterController : ControllerBase
     {
+
         private readonly IUserAccount _userAccount;
         private readonly AppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -29,6 +31,10 @@ namespace IdentityManagerServerApi.Controllers.AccountController
         [HttpPost]
         public async Task<IActionResult> Register(SpecialDTO specialDTO)
         {
+
+
+
+
 
             var response = await _userAccount.CreateAccountSpecial(specialDTO);
 
@@ -54,7 +60,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
 
             if (specialDTO.IsDoctor)
             {
-                AddDoctor(specialDTO,  lastUserId);
+                AddDoctor(specialDTO,  lastUserId );
             }
             else if (specialDTO.IsStudent)
             {
@@ -62,12 +68,14 @@ namespace IdentityManagerServerApi.Controllers.AccountController
             }
             else if (specialDTO.IsPatient)
             {
-                AddPatient(specialDTO, lastUserId);
+                AddPatient(specialDTO, lastUserId );
             }
 
             await _db.SaveChangesAsync();
             return Ok(response);
         }
+
+
 
         private async Task<bool> AddAdminIfNeeded()
         {
@@ -97,8 +105,9 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 .FirstOrDefaultAsync();
         }
 
-        private void AddDoctor(SpecialDTO specialDTO, string userId)
+        private void AddDoctor(SpecialDTO specialDTO, string userId )
         {
+
             var newDoctor = new Doctor
             {
                 FirstName = specialDTO.FirstName,
@@ -109,19 +118,21 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 UniversityName = specialDTO.UniversityName,
                 ClinicAddress = specialDTO.ClinicAddress,
                 ClinicNumber = specialDTO.ClinicNumber,
-                GPA = specialDTO.GPA,
+                GPA = specialDTO.GPA,   
                 GraduationDate = specialDTO.GraduationDate,
                 BirthDate = specialDTO.BirthDate,
                 Certificates = specialDTO.Certificates,
                 InsuranceCompanies = specialDTO.InsuranceCompanies,
-                UserId = userId
+                UserId = userId,
 
             };
             _db.Doctors.Add(newDoctor);
         }
 
-        private void AddStudent(SpecialDTO specialDTO, string userId)
+        private void AddStudent(SpecialDTO specialDTO, string userId  )
         {
+
+
             var newStudent = new Student
             {
                 FirstName = specialDTO.FirstName,
@@ -134,14 +145,17 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 AcademicYear = specialDTO.AcademicYear,
                 GPA = specialDTO.GPA,
                 BirthDate = specialDTO.BirthDate,
-                UserId = userId
-
+                UserId = userId,
             };
+
+
             _db.Students.Add(newStudent);
         }
 
         private void AddPatient(SpecialDTO specialDTO, string userId)
         {
+
+
             var newPatient = new Patient
             {
                 FirstName = specialDTO.FirstName,
@@ -152,7 +166,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 Address = specialDTO.Address,
                 InsuranceCompany = specialDTO.InsuranceCompany,
                 BirthDate = specialDTO.BirthDate,
-                UserId = userId
+                UserId = userId,
             };
             _db.Patients.Add(newPatient);
         }

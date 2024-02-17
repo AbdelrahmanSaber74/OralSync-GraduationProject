@@ -24,13 +24,14 @@ public class Comment
     public ApplicationUser User { get; set; }
 
 
+
+
     // Foreign key property
-    [Required]
     public int PostId { get; set; }
 
-    // Navigation property for the post this comment belongs to
-    [ForeignKey("PostId")]
+    // Navigation property for the post this like belongs to
     public virtual Post Post { get; set; }
+
 
 
 

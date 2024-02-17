@@ -34,6 +34,9 @@ public class Student
     public int? AcademicYear { get; set; }
 
 
+
+
+
     [Required]
     public string BirthDate { get; set; }
 
