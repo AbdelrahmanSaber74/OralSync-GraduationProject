@@ -1,27 +1,29 @@
 ﻿using GraduationProjectApi.Models;
 using IdentityManagerServerApi.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.IO;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace GraduationProjectApi.Controllers.AccountController.ImageProfile
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class updateProfileImageController : ControllerBase
+    public class UpdateProfileImageController : ControllerBase
     {
-        private readonly IWebHostEnvironment environment;
+        private readonly IWebHostEnvironment _environment;
         private readonly AppDbContext _db;
-        public updateProfileImageController(IWebHostEnvironment environment, AppDbContext db)
+
+        public UpdateProfileImageController(IWebHostEnvironment environment, AppDbContext db)
         {
-            this.environment = environment;
+            _environment = environment;
             _db = db;
         }
-        
-
 
         [Authorize]
         [HttpPut]
@@ -29,44 +31,44 @@ namespace GraduationProjectApi.Controllers.AccountController.ImageProfile
         {
             try
             {
-
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
+                if (user == null)
+                    return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User not found.", MessageAr = "المستخدم غير موجود." });
 
-                string Filepath = GetFilepath(userId);
-                if (!System.IO.Directory.Exists(Filepath))
-                {
-                    System.IO.Directory.CreateDirectory(Filepath);
-                }
+                string filePath = GetFilePath(userId);
 
-                string imagepath = Filepath + "\\" + userId + ".png";
-                if (System.IO.File.Exists(imagepath))
-                {
-                    System.IO.File.Delete(imagepath);
-                }
-                using (FileStream stream = System.IO.File.Create(imagepath))
+                if (!Directory.Exists(filePath))
+                    Directory.CreateDirectory(filePath);
+
+                string imagePath = Path.Combine(filePath, $"{userId}.png");
+
+                if (System.IO.File.Exists(imagePath))
+                    System.IO.File.Delete(imagePath);
+
+                using (FileStream stream = System.IO.File.Create(imagePath))
                 {
                     await formFile.CopyToAsync(stream);
                     user.ProfileImage = $"/Profile/{userId}/{userId}.png";
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
 
 
-                    return Ok("Done Profile Image Uploaad");
+                    return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Profile image uploaded successfully.", MessageAr = "تم تحميل صورة الملف الشخصي بنجاح." });
+
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                return StatusCode(StatusCodes.Status400BadRequest, new { StatusCode = 400, MessageEn = $"Failed to upload profile image: {ex.Message}.", MessageAr = "فشل تحميل صورة الملف الشخصي." });
+
             }
         }
 
-        [NonAction]
-        private string GetFilepath(string userId)
+        private string GetFilePath(string userId)
         {
-            return this.environment.WebRootPath + $"\\Profile\\{userId}" ;
+            return Path.Combine(_environment.WebRootPath, $"Profile\\{userId}");
         }
-
 
 
 

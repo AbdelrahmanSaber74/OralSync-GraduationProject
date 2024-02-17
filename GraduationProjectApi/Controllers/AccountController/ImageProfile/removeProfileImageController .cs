@@ -1,74 +1,70 @@
 ﻿using GraduationProjectApi.Models;
 using IdentityManagerServerApi.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.DTOs;
+using System;
 using System.IO;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace GraduationProjectApi.Controllers.AccountController.ImageProfile
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class removeProfileImageController : ControllerBase
+    public class RemoveProfileImageController : ControllerBase
     {
-        private readonly IWebHostEnvironment environment;
+        private readonly IWebHostEnvironment _environment;
         private readonly AppDbContext _db;
-        public removeProfileImageController(IWebHostEnvironment environment, AppDbContext db)
+
+        public RemoveProfileImageController(IWebHostEnvironment environment, AppDbContext db)
         {
-            this.environment = environment;
+            _environment = environment;
             _db = db;
         }
 
-
-
-
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> remove( bool IsMale)
+        public async Task<IActionResult> Remove(bool isMale)
         {
-            // string Imageurl = string.Empty;
-            //string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-            string defaultImage = IsMale ? "male.png" : "female.png";
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
-
-
-
             try
             {
-                string Filepath = GetFilepath(userId);
-                string imagepath = Filepath + "\\" + userId + ".png";
-                if (System.IO.File.Exists(imagepath))
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+                if (user == null)
+                    return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User not found.", MessageAr = "المستخدم غير موجود." });
+
+                string defaultImage = isMale ? "male.png" : "female.png";
+
+                string filePath = GetFilePath(userId);
+                string imagePath = Path.Combine(filePath, $"{userId}.png");
+
+                if (System.IO.File.Exists(imagePath))
                 {
-
-                    System.IO.File.Delete(imagepath);
+                    System.IO.File.Delete(imagePath);
                     user.ProfileImage = $"/Profile/default/{defaultImage}";
-                    _db.SaveChanges();
-                    return Ok("pass");
-
+                    await _db.SaveChangesAsync();
+                    return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Profile image uploaded successfully.", MessageAr = "تم تحميل صورة الملف الشخصي بنجاح." });
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("Profile image not found.");
                 }
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status400BadRequest, new { StatusCode = 400, MessageEn = $"Failed to upload profile image: {ex.Message}.", MessageAr = "فشل تحميل صورة الملف الشخصي." });
             }
-
-
         }
 
-
-
         [NonAction]
-        private string GetFilepath(string userId)
+        private string GetFilePath(string userId)
         {
-            return this.environment.WebRootPath + $"\\Profile\\{userId}" ;
+            return Path.Combine(_environment.WebRootPath, $"Profile\\{userId}");
         }
 
 
