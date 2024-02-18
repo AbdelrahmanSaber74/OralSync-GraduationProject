@@ -48,7 +48,7 @@ namespace GraduationProjectApi.Controllers.AccountController.ImageProfile
                     System.IO.File.Delete(imagePath);
                     user.ProfileImage = $"/Profile/default/{defaultImage}";
                     await _db.SaveChangesAsync();
-                    return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Profile image uploaded successfully.", MessageAr = "تم تحميل صورة الملف الشخصي بنجاح." });
+                    return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Profile image deleted successfully.", MessageAr = "تم حذف صورة الملف الشخصي بنجاح." });
                 }
                 else
                 {
@@ -57,7 +57,7 @@ namespace GraduationProjectApi.Controllers.AccountController.ImageProfile
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, new { StatusCode = 400, MessageEn = $"Failed to upload profile image: {ex.Message}.", MessageAr = "فشل تحميل صورة الملف الشخصي." });
+                return StatusCode(StatusCodes.Status400BadRequest, new { StatusCode = 400, MessageEn = $"Failed to delete image: {ex.Message}.", MessageAr = "فشل حذف الصورة." });
             }
         }
 

@@ -14,14 +14,14 @@ namespace IdentityManagerServerApi.Controllers.AccountController
     [Route("api/[controller]")]
     [ApiController]
 
-    public class SpecialRegisterController : ControllerBase
+    public class RegisterController : ControllerBase
     {
 
         private readonly IUserAccount _userAccount;
         private readonly AppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public SpecialRegisterController(IUserAccount userAccount, AppDbContext db, UserManager<ApplicationUser> userManager)
+        public RegisterController(IUserAccount userAccount, AppDbContext db, UserManager<ApplicationUser> userManager)
         {
             _userAccount = userAccount;
             _db = db;
