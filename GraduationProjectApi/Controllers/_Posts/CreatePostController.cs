@@ -39,7 +39,8 @@ namespace GraduationProjectApi.Controllers._Posts
 
                 // Validate user id
                 if (string.IsNullOrEmpty(userId))
-                    return BadRequest(new { StatusCode = 400, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم." });
+                    return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
+
 
                 // Generate new post ID
                 int postId = _db.Posts.OrderByDescending(p => p.PostId).Select(m => m.PostId).FirstOrDefault() + 1;
@@ -76,7 +77,9 @@ namespace GraduationProjectApi.Controllers._Posts
                 await _db.SaveChangesAsync();
 
                 // Return successful response
-                return Ok(new { StatusCode = 200, MessageEn = "Post created successfully", MessageAr = "تم إنشاء المنشور بنجاح." });
+
+                return StatusCode(StatusCodes.Status200OK, new { StatusCode = 404, MessageEn = "Post created successfully", MessageAr = "تم إنشاء المنشور بنجاح" });
+
             }
             catch (Exception ex)
             {
