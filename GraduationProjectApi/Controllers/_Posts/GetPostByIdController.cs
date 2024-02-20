@@ -5,11 +5,14 @@ using System.Collections.Generic;
 using IdentityManagerServerApi.Data;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace GraduationProjectApi.Controllers._Posts
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin, Doctor, Student")]
     public class GetPostByIdController : ControllerBase
     {
         private readonly IWebHostEnvironment _environment;
@@ -21,11 +24,15 @@ namespace GraduationProjectApi.Controllers._Posts
             _db = db;
         }
 
+
         [HttpGet]
-        public IActionResult Get(string userId, int postId)
+        public IActionResult Get(int postId)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+
             var posts = _db.Posts
-                            .Where(m => m.UserId == userId && m.PostId == postId && m.IsVisible)
+                            .Where(m => m.UserId == userId && m.PostId == postId && m.IsVisible == true)
                             .ToList();
 
             if (posts.Any())
@@ -43,26 +50,16 @@ namespace GraduationProjectApi.Controllers._Posts
                     p.TimeUpdated,
                     p.UserId,
                     p.Comments,
-                    p.Likes
-                }
-                )
-                 .ToList();
+                    p.Likes,
+                    Image = p.Image.Select(image => hostUrl + image).ToList()
+                }).ToList();
 
-                var images = posts.SelectMany(post => post.Image).ToList();
-                List<string> combinedUrls = images.Select(image => hostUrl + image).ToList();
-
-                return Ok(new
-                {
-                    result,
-                    PostImage = combinedUrls
-                });
+                return Ok(result);
             }
 
-
-            return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "No posts found for the provided user ID and post ID", MessageAr = "لم يتم العثور على مشاركات لمعرف المستخدم" });
-
-
+            return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "No posts found for the provided user ID", MessageAr = "لم يتم العثور على مشاركات لمعرف المستخدم" });
         }
+
 
 
         private string GetFilePath(string userId, string postId)

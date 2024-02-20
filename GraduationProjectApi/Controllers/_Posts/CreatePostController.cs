@@ -16,7 +16,7 @@ namespace GraduationProjectApi.Controllers._Posts
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Admin, Doctor, Student")]
     public class CreatePostController : ControllerBase
     {
         private readonly IWebHostEnvironment _environment;
@@ -78,7 +78,7 @@ namespace GraduationProjectApi.Controllers._Posts
 
                 // Return successful response
 
-                return StatusCode(StatusCodes.Status200OK, new { StatusCode = 404, MessageEn = "Post created successfully", MessageAr = "تم إنشاء المنشور بنجاح" });
+                return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Post created successfully", MessageAr = "تم إنشاء المنشور بنجاح" });
 
             }
             catch (Exception ex)
