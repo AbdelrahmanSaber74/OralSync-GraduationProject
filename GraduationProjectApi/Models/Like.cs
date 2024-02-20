@@ -21,7 +21,6 @@ public class Like
     public string TimeUpdated { get; set; }
 
 
-    [Required]
     public string UserId { get; set; }
 
 
@@ -30,7 +29,8 @@ public class Like
     // Foreign key property
     public int PostId { get; set; }
 
-    // Navigation property for the post this like belongs to
+    // Navigation property for the post this comment belongs to
+    [ForeignKey("PostId")]
     public virtual Post Post { get; set; }
 
 

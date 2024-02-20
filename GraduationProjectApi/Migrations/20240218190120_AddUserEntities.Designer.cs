@@ -4,6 +4,7 @@ using IdentityManagerServerApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityManagerServerApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240218190120_AddUserEntities")]
+    partial class AddUserEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,11 +27,11 @@ namespace IdentityManagerServerApi.Migrations
 
             modelBuilder.Entity("GraduationProjectApi.Models.Post", b =>
                 {
-                    b.Property<int>("PostId")
+                    b.Property<int?>("PostId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PostId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("PostId"));
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -43,7 +46,6 @@ namespace IdentityManagerServerApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsVisible")
@@ -262,9 +264,6 @@ namespace IdentityManagerServerApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LikeId"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("DateCreated")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -289,8 +288,6 @@ namespace IdentityManagerServerApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LikeId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("PostId");
 
@@ -575,10 +572,6 @@ namespace IdentityManagerServerApi.Migrations
 
             modelBuilder.Entity("IdentityManagerServerApi.Models.Like", b =>
                 {
-                    b.HasOne("IdentityManagerServerApi.Data.ApplicationUser", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("GraduationProjectApi.Models.Post", "Post")
                         .WithMany("Likes")
                         .HasForeignKey("PostId")
@@ -670,8 +663,6 @@ namespace IdentityManagerServerApi.Migrations
             modelBuilder.Entity("IdentityManagerServerApi.Data.ApplicationUser", b =>
                 {
                     b.Navigation("Doctors");
-
-                    b.Navigation("Likes");
 
                     b.Navigation("Patients");
 

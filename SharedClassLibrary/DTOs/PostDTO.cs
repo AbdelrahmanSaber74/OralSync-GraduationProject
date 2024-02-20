@@ -14,7 +14,6 @@ namespace SharedClassLibrary.DTOs
         [Required(ErrorMessage = "IsVisible is required.")]
         public bool IsVisible { get; set; }
 
-        public string? Image { get; set; }
 
 
 

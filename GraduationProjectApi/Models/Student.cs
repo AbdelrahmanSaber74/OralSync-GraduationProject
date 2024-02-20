@@ -40,8 +40,8 @@ public class Student
     [Required]
     public string BirthDate { get; set; }
 
-    [Required]
     public string UserId { get; set; }
 
+    public ApplicationUser User { get; set; }
 
 }
