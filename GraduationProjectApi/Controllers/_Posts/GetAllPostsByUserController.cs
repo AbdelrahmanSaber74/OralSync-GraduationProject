@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using GraduationProjectApi.Models;
-using System.Collections.Generic;
+using System;
+using System.IO;
+using System.Linq;
 using IdentityManagerServerApi.Data;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
@@ -15,13 +16,11 @@ namespace GraduationProjectApi.Controllers._Posts
     [Authorize(Roles = "Admin, Doctor, Student")]
     public class GetAllPostsByUserController : ControllerBase
     {
-        private readonly IWebHostEnvironment _environment;
         private readonly AppDbContext _db;
 
-        public GetAllPostsByUserController(IWebHostEnvironment environment, AppDbContext db)
+        public GetAllPostsByUserController(AppDbContext db)
         {
-            _environment = environment;
-            _db = db;
+            _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
         [HttpGet]
@@ -29,17 +28,20 @@ namespace GraduationProjectApi.Controllers._Posts
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var posts = _db.Posts
-                            .Where(m => m.UserId == userId && m.IsVisible)
-                            .ToList();
-
-            if (posts.Any())
+            if (string.IsNullOrEmpty(userId))
             {
-                string hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+                return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
+            }
 
-                var result = posts.Select(p => new
+            string hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+
+            var posts = _db.Posts
+                .Where(m => m.UserId == userId && m.IsVisible)
+                .Include(post => post.User)
+                .Select(p => new
                 {
                     p.PostId,
+                    UserName = p.User.Name,
                     p.Title,
                     p.Content,
                     p.DateCreated,
@@ -49,21 +51,18 @@ namespace GraduationProjectApi.Controllers._Posts
                     p.UserId,
                     p.Comments,
                     p.Likes,
-                    Image = p.Image.Select(image => hostUrl + image).ToList() 
-                    }).ToList();
+                    Image = p.Image.Select(image => hostUrl + image).ToList()
+                })
+                .ToList();
 
-                return Ok(result);
+            if (posts.Count > 0)
+            {
+                return Ok(posts);
             }
 
-            return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "No posts found for the provided user ID", MessageAr = "لم يتم العثور على مشاركات لمعرف المستخدم" });
+            return Ok(new object[0]);
+
+
         }
-
-
-        private string GetFilePath(string userId, string postId)
-        {
-            return Path.Combine(_environment.WebRootPath, $"Post\\{userId}\\{postId}");
-        }
-
-
     }
 }

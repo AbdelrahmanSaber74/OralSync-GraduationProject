@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using GraduationProjectApi.Models;
-using System.Collections.Generic;
+using System;
+using System.IO;
+using System.Linq;
 using IdentityManagerServerApi.Data;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
@@ -15,33 +16,32 @@ namespace GraduationProjectApi.Controllers._Posts
     [Authorize(Roles = "Admin, Doctor, Student")]
     public class GetPostByIdController : ControllerBase
     {
-        private readonly IWebHostEnvironment _environment;
         private readonly AppDbContext _db;
 
-        public GetPostByIdController(IWebHostEnvironment environment, AppDbContext db)
+        public GetPostByIdController(AppDbContext db)
         {
-            _environment = environment;
-            _db = db;
+            _db = db ?? throw new ArgumentNullException(nameof(db));
         }
-
 
         [HttpGet]
         public IActionResult Get(int postId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            if (string.IsNullOrEmpty(userId))
+            {
+                return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
+            }
+
+            string hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
             var posts = _db.Posts
-                            .Where(m => m.UserId == userId && m.PostId == postId && m.IsVisible == true)
-                            .ToList();
-
-            if (posts.Any())
-            {
-                string hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-
-                var result = posts.Select(p => new
+                .Where(m => m.UserId == userId && m.PostId == postId && m.IsVisible)
+                .Include(post => post.User)
+                .Select(p => new
                 {
                     p.PostId,
+                    UserName = p.User.Name,
                     p.Title,
                     p.Content,
                     p.DateCreated,
@@ -52,135 +52,17 @@ namespace GraduationProjectApi.Controllers._Posts
                     p.Comments,
                     p.Likes,
                     Image = p.Image.Select(image => hostUrl + image).ToList()
-                }).ToList();
+                })
+                .ToList();
 
-                return Ok(result);
+            if (posts.Count > 0)
+            {
+                return Ok(posts);
             }
 
-            return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "No posts found for the provided user ID", MessageAr = "لم يتم العثور على مشاركات لمعرف المستخدم" });
+            return Ok(new object[0]);
+
+
         }
-
-
-
-        private string GetFilePath(string userId, string postId)
-        {
-            return Path.Combine(_environment.WebRootPath, $"Post\\{userId}\\{postId}");
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //private async Task<IActionResult> GetMultiImage(string userId, string postId)
-        //{
-        //    try
-        //    {
-        //        // Initialize a list to store image URLs
-        //        List<string> imageUrls = new List<string>();
-
-        //        // Construct the base URL of the API
-        //        string baseUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-
-        //        // Get the file path for the images
-        //        string filePath = GetFilePath(userId, postId);
-
-        //        // Check if the directory exists
-        //        if (Directory.Exists(filePath))
-        //        {
-        //            // Get information about the directory
-        //            DirectoryInfo directoryInfo = new DirectoryInfo(filePath);
-
-        //            // Get all files in the directory
-        //            FileInfo[] fileInfos = directoryInfo.GetFiles();
-
-        //            // Iterate through each file
-        //            foreach (FileInfo fileInfo in fileInfos)
-        //            {
-        //                // Construct the full path of the image
-        //                string imagePath = Path.Combine(filePath, fileInfo.Name);
-
-        //                // Check if the file exists
-        //                if (System.IO.File.Exists(imagePath))
-        //                {
-        //                    // Construct the image URL
-        //                    string imageUrl = $"{baseUrl}/Post/{userId}/{postId}/{fileInfo.Name}";
-
-        //                    // Add the image URL to the list
-        //                    imageUrls.Add(imageUrl);
-        //                }
-        //            }
-        //        }
-        //        // Return the list of image URLs as a successful response
-        //        return Ok(imageUrls);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log the exception or handle it appropriately
-        //        return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred: {ex.Message}");
-        //    }
-        //}
-
-
-
-        //[HttpGet("multiRemove")]
-        //public async Task<IActionResult> multiremove(string userId, string postId)
-        //{
-        //    string Imageurl = string.Empty;
-        //    string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-        //    try
-        //    {
-        //        string Filepath = GetFilepathPost(userId, postId);
-        //        if (System.IO.Directory.Exists(Filepath))
-        //        {
-        //            DirectoryInfo directoryInfo = new DirectoryInfo(Filepath);
-        //            FileInfo[] fileInfos = directoryInfo.GetFiles();
-        //            foreach (FileInfo fileInfo in fileInfos)
-        //            {
-        //                fileInfo.Delete();
-        //            }
-        //            return Ok("pass");
-        //        }
-        //        else
-        //        {
-        //            return NotFound();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return NotFound();
-        //    }
-
-
-        //}
-
-
-
-
-
-
-
-
     }
 }
