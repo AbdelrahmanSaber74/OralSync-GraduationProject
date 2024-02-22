@@ -60,6 +60,8 @@ namespace SharedClassLibrary.DTOs
         public List<string>? Address { get; set; }
         public string? InsuranceCompany { get; set; }
 
+
+
         // Student properties
         public List<string>? UniversityAddress { get; set; }
 

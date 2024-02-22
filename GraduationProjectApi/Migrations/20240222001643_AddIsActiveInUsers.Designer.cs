@@ -4,6 +4,7 @@ using IdentityManagerServerApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityManagerServerApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240222001643_AddIsActiveInUsers")]
+    partial class AddIsActiveInUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,6 +268,9 @@ namespace IdentityManagerServerApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LikeId"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("DateCreated")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -286,13 +292,13 @@ namespace IdentityManagerServerApi.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LikeId");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PostId");
 
                     b.ToTable("Likes");
                 });
@@ -335,7 +341,6 @@ namespace IdentityManagerServerApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("PatientId");
@@ -549,13 +554,13 @@ namespace IdentityManagerServerApi.Migrations
                     b.HasOne("GraduationProjectApi.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("IdentityManagerServerApi.Data.ApplicationUser", "User")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Post");
@@ -576,21 +581,17 @@ namespace IdentityManagerServerApi.Migrations
 
             modelBuilder.Entity("IdentityManagerServerApi.Models.Like", b =>
                 {
+                    b.HasOne("IdentityManagerServerApi.Data.ApplicationUser", null)
+                        .WithMany("Likes")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("GraduationProjectApi.Models.Post", "Post")
                         .WithMany("Likes")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("IdentityManagerServerApi.Data.ApplicationUser", "User")
-                        .WithMany("Likes")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Post");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("IdentityManagerServerApi.Models.Patient", b =>
@@ -598,8 +599,7 @@ namespace IdentityManagerServerApi.Migrations
                     b.HasOne("IdentityManagerServerApi.Data.ApplicationUser", "User")
                         .WithMany("Patients")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
                 });
@@ -675,8 +675,6 @@ namespace IdentityManagerServerApi.Migrations
 
             modelBuilder.Entity("IdentityManagerServerApi.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("Doctors");
 
                     b.Navigation("Likes");

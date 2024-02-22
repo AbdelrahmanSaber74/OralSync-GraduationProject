@@ -41,8 +41,6 @@ public class Doctor
 
 
 
-
-
     [Required]  
     public string BirthDate { get; set; }
 

@@ -109,6 +109,7 @@ namespace IdentityManagerServerApi.Repositories
                 PasswordHash = specialDTO.Password,
                 UserName = specialDTO.Email,
                 PhoneNumber = specialDTO.PhoneNumber,
+                IsActive = true ,
                 ProfileImage = $"/Profile/default/{defaultImage}" ,
                 TimeAddUser = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time")),
             };

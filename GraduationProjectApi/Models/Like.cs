@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using GraduationProjectApi.Models;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace IdentityManagerServerApi.Models;
 public class Like
@@ -22,16 +23,11 @@ public class Like
 
 
     public string UserId { get; set; }
+    public ApplicationUser User { get; set; }
 
-
-
-
-    // Foreign key property
     public int PostId { get; set; }
 
-    // Navigation property for the post this comment belongs to
-    [ForeignKey("PostId")]
-    public virtual Post Post { get; set; }
+    public  Post Post { get; set; }
 
 
 

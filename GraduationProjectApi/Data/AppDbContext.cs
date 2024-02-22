@@ -53,21 +53,21 @@ namespace IdentityManagerServerApi.Data
             modelBuilder.Entity<Doctor>()
                 .HasOne(d => d.User)                    // Each Doctor has one User
                 .WithMany(u => u.Doctors)               // Each User can be associated with multiple Doctors
-                .HasForeignKey(d => d.UserId)          // Foreign key linking Doctor to User
+                .HasForeignKey(d => d.UserId)           // Foreign key linking Doctor to User
                 .OnDelete(DeleteBehavior.Cascade);      // Cascade delete: if User is deleted, associated Doctor entities are also deleted
 
             // Cascading delete for Student entities
             modelBuilder.Entity<Student>()
                 .HasOne(s => s.User)                    // Each Student has one User
                 .WithMany(u => u.Students)              // Each User can be associated with multiple Students
-                .HasForeignKey(s => s.UserId)          // Foreign key linking Student to User
+                .HasForeignKey(s => s.UserId)           // Foreign key linking Student to User
                 .OnDelete(DeleteBehavior.Cascade);      // Cascade delete: if User is deleted, associated Student entities are also deleted
 
             // Cascading delete for Patient entities
             modelBuilder.Entity<Patient>()
                 .HasOne(p => p.User)                    // Each Patient has one User
                 .WithMany(u => u.Patients)              // Each User can be associated with multiple Patients
-                .HasForeignKey(p => p.UserId)          // Foreign key linking Patient to User
+                .HasForeignKey(p => p.UserId)           // Foreign key linking Patient to User
                 .OnDelete(DeleteBehavior.Cascade);      // Cascade delete: if User is deleted, associated Patient entities are also deleted
 
 
@@ -81,11 +81,24 @@ namespace IdentityManagerServerApi.Data
 
             // One-to-many relationship between User and Post
 
-            modelBuilder.Entity<Post>()
-                .HasOne(p => p.User)        // A post has one user
-                .WithMany(u => u.Posts)     // A user can have many posts
-                .HasForeignKey(p => p.UserId) // Define foreign key relationship
-                .OnDelete(DeleteBehavior.Restrict); // Cascade delete: if User is deleted, associated Patient entities are also deleted
+                modelBuilder.Entity<Post>()
+             .HasOne(p => p.User)                    // A post has one user
+             .WithMany(u => u.Posts)                 // A user can have many posts
+             .HasForeignKey(p => p.UserId)          // Define foreign key relationship
+             .OnDelete(DeleteBehavior.Restrict);      // Cascade delete: if User is deleted, associated posts are also deleted
+
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.User)                    // A like has one user
+                .WithMany(u => u.Likes)                 // A user can have many likes
+                .HasForeignKey(l => l.UserId)          // Define foreign key relationship
+                .OnDelete(DeleteBehavior.Restrict);      // Cascade delete: if User is deleted, associated likes are also deleted
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.User)                    // A comment has one user
+                .WithMany(u => u.Comments)              // A user can have many comments
+                .HasForeignKey(c => c.UserId)          // Define foreign key relationship
+                .OnDelete(DeleteBehavior.Restrict);      // Cascade delete: if User is deleted, associated comments are also deleted
+
 
 
             // One-to-many relationship between Post and Comment
@@ -94,7 +107,7 @@ namespace IdentityManagerServerApi.Data
             .HasOne(c => c.Post)
             .WithMany(p => p.Comments)
             .HasForeignKey(c => c.PostId)
-            .OnDelete(DeleteBehavior.Restrict); // Cascade delete: if User is deleted, associated Patient entities are also deleted
+            .OnDelete(DeleteBehavior.Cascade); // Cascade delete: if User is deleted, associated Patient entities are also deleted
 
             // One-to-many relationship between Post and Like
 
@@ -102,7 +115,7 @@ namespace IdentityManagerServerApi.Data
                 .HasOne(l => l.Post)
                 .WithMany(p => p.Likes)
                 .HasForeignKey(l => l.PostId)
-                .OnDelete(DeleteBehavior.Restrict);  // Cascade delete: if User is deleted, associated Patient entities are also deleted
+                .OnDelete(DeleteBehavior.Cascade);  // Cascade delete: if User is deleted, associated Patient entities are also deleted
 
 
 

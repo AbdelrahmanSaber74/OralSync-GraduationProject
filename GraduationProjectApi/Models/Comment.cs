@@ -20,13 +20,10 @@ namespace IdentityManagerServerApi.Models
         public string TimeUpdated { get; set; }
 
         public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
-
-        // Foreign key property
         public int PostId { get; set; }
 
-        // Navigation property for the post this comment belongs to
-        [ForeignKey("PostId")]
-        public virtual Post Post { get; set; }
+        public ApplicationUser User { get; set; }
+
+        public  Post Post { get; set; }
     }
 }
