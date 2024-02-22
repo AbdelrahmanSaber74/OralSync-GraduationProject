@@ -34,6 +34,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 return StatusCode(StatusCodes.Status400BadRequest, new { StatusCode = 400, MessageEn = "Invalid Email Or Password", MessageAr = "البريد الإلكتروني أو كلمة المرور غير صالحة" });
             }
 
+
             var (userId, userRole) = GetUserIdAndRoleFromToken(response.Token);
 
             if (userId == null || userRole == null)
@@ -48,6 +49,14 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 return StatusCode(StatusCodes.Status402PaymentRequired, new { StatusCode = 402, MessageEn = "Error retrieving user details", MessageAr = "خطأ في استرداد تفاصيل المستخدم" });
             }
 
+            var isActive = _db.Users
+                .Where(m => m.Id == userId && m.IsActive == false)
+                .FirstOrDefault();
+
+            if (isActive != null)
+            {
+                return StatusCode(StatusCodes.Status406NotAcceptable, new { StatusCode = 406, MessageEn = "Your account is not active. Please contact support for assistance or consider substituting it.", MessageAr = "حسابك غير نشط. يرجى الاتصال بالدعم للحصول على المساعدة أو النظر في استبداله." });
+            }
 
             string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
             var profileImage = _db.Users.Where(m=>m.Id == userId).Select(m=>m.ProfileImage).FirstOrDefault();
