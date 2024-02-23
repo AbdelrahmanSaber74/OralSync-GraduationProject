@@ -2,7 +2,7 @@
 
 namespace SharedClassLibrary.DTOs
 {
-    public class PostDto
+    public class CommentDTO
     {
         [Required(ErrorMessage = "Title is required.")]
         public string Title { get; set; }
@@ -10,7 +10,7 @@ namespace SharedClassLibrary.DTOs
         [Required(ErrorMessage = "Content is required.")]
         public string Content { get; set; }
 
-
+        public int PostId { get; set; }
 
 
     }

@@ -24,7 +24,7 @@ namespace GraduationProjectApi.Controllers.AccountController.Active
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet]
+        [HttpPut]
         public async Task<IActionResult> Activate(string email)
         {
             var user = _db.Users.FirstOrDefault(m => m.Email == email && !m.IsActive);

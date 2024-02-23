@@ -50,7 +50,7 @@ namespace GraduationProjectApi.Controllers._Posts
                     p.TimeUpdated,
                     p.UserId,
                     p.Comments,
-                    p.Likes,
+                    LikeCount = p.Likes.Count,
                     Image = p.Image.Select(image => hostUrl + image).ToList()
                 })
                 .ToList();

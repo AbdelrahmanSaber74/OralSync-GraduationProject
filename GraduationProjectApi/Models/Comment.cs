@@ -13,6 +13,9 @@ namespace IdentityManagerServerApi.Models
         [Required]
         public string Content { get; set; }
 
+        [Required]
+        public string Title { get; set; }
+
         public string DateCreated { get; set; }
         public string TimeCreated { get; set; }
 

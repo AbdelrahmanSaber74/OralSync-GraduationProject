@@ -1,15 +1,13 @@
 ﻿using IdentityManagerServerApi.Data;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using GraduationProjectApi.Models;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
-namespace IdentityManagerServerApi.Models;
-public class Like
+namespace IdentityManagerServerApi.Models
 {
 
 
-
+public class Like
+{
 
     [Key]
     public int LikeId { get; set; }
@@ -29,6 +27,6 @@ public class Like
 
     public  Post Post { get; set; }
 
-
+    }
 
 }
