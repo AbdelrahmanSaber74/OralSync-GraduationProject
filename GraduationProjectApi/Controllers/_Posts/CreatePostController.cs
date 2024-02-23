@@ -1,5 +1,6 @@
 ﻿using GraduationProjectApi.Models;
 using IdentityManagerServerApi.Data;
+using IdentityManagerServerApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -76,7 +77,12 @@ namespace GraduationProjectApi.Controllers._Posts
                 _db.Posts.Update(post);
                 await _db.SaveChangesAsync();
 
+
+        
+
+
                 // Return successful response
+
 
                 return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Post created successfully", MessageAr = "تم إنشاء المنشور بنجاح" });
 

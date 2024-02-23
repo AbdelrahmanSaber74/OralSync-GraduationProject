@@ -9,6 +9,7 @@ using SharedClassLibrary.DTOs;
 using System.Security.Claims;
 using SharedClassLibrary.Helper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Hosting;
 
 namespace GraduationProjectApi.Controllers.Likes
 {
@@ -39,6 +40,10 @@ namespace GraduationProjectApi.Controllers.Likes
                     return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
 
 
+
+                var post = _db.Posts.Where(m => m.PostId == PostId).FirstOrDefault();
+
+
                 // Map the DTO to the Like entity
                 var like = new Like
                 {
@@ -53,6 +58,27 @@ namespace GraduationProjectApi.Controllers.Likes
                 // Add the like to the database
                 _db.Likes.Add(like);
                 _db.SaveChanges();
+
+
+
+
+
+                // Create a notification for the post owner
+                var notification = new Notification
+                {
+                    UserId = post.UserId,
+                    SenderUserId = userId,
+                    PostId = PostId,
+                    Type = NotificationType.Like,
+                    DateCreated = DateTimeHelper.FormatDate(DateTime.Now),
+                    TimeCreated = DateTimeHelper.FormatTime(DateTime.Now),
+
+                };
+
+                _db.Notifications.Add(notification);
+                _db.SaveChanges();
+
+
 
                 // Return a success response
                 return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Like added successfully", MessageAr = "تمت إضافة الإعجاب بنجاح" });
