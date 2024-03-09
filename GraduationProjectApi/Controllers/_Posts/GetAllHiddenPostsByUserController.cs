@@ -14,17 +14,17 @@ namespace GraduationProjectApi.Controllers._Posts
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class GetPostByIdController : ControllerBase
+    public class GetAllHiddenPostsByUserController : ControllerBase
     {
         private readonly AppDbContext _db;
 
-        public GetPostByIdController(AppDbContext db)
+        public GetAllHiddenPostsByUserController(AppDbContext db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
         [HttpGet]
-        public IActionResult Get(int postId)
+        public IActionResult Get()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -36,7 +36,7 @@ namespace GraduationProjectApi.Controllers._Posts
             string hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
             var posts = _db.Posts
-                .Where(m => m.UserId == userId && m.PostId == postId && m.IsVisible)
+                .Where(m => m.UserId == userId && m.IsVisible == false)
                 .Include(post => post.User)
                 .Select(p => new
                 {
