@@ -13,7 +13,6 @@ namespace IdentityManagerServerApi.Data
 
         public string? ProfileImage { get; set; }
         public bool IsActive { get; set; }
-        public int Rate { get; set; } = 3 ;
         public DateTime TimeAddUser { get; set; }
 
 
@@ -29,6 +28,12 @@ namespace IdentityManagerServerApi.Data
         public  ICollection<Like> Likes { get; set; }
         public  ICollection<Comment> Comments { get; set; }
 
+
+        // Navigation property for ratings associated with this user (receiver)
+        public virtual ICollection<Rating> ReceivedRatings { get; set; }
+
+        // Navigation property for ratings provided by this user (sender)
+        public virtual ICollection<Rating> SentRatings { get; set; }
 
     }
 }

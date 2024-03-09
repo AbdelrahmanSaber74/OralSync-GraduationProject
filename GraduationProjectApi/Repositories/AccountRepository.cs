@@ -111,7 +111,6 @@ namespace IdentityManagerServerApi.Repositories
                 PhoneNumber = specialDTO.PhoneNumber,
                 IsActive = true ,
                 ProfileImage = $"/Profile/default/{defaultImage}" ,
-                Rate = 3 ,
                 TimeAddUser = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time")),
             };
 

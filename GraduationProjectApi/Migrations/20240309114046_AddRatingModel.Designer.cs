@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityManagerServerApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240309110627_AddRateInUsers")]
-    partial class AddRateInUsers
+    [Migration("20240309114046_AddRatingModel")]
+    partial class AddRatingModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -165,9 +165,6 @@ namespace IdentityManagerServerApi.Migrations
 
                     b.Property<string>("ProfileImage")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Rate")
-                        .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -432,6 +429,37 @@ namespace IdentityManagerServerApi.Migrations
                     b.ToTable("Patients");
                 });
 
+            modelBuilder.Entity("IdentityManagerServerApi.Models.Rating", b =>
+                {
+                    b.Property<int>("RatingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RatingId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RatedUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("RatingId");
+
+                    b.HasIndex("RatedUserId");
+
+                    b.HasIndex("SenderUserId");
+
+                    b.ToTable("Rating");
+                });
+
             modelBuilder.Entity("IdentityManagerServerApi.Models.Student", b =>
                 {
                     b.Property<int>("StudentId")
@@ -691,6 +719,25 @@ namespace IdentityManagerServerApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("IdentityManagerServerApi.Models.Rating", b =>
+                {
+                    b.HasOne("IdentityManagerServerApi.Data.ApplicationUser", "RatedUser")
+                        .WithMany("ReceivedRatings")
+                        .HasForeignKey("RatedUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("IdentityManagerServerApi.Data.ApplicationUser", "SenderUser")
+                        .WithMany("SentRatings")
+                        .HasForeignKey("SenderUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("RatedUser");
+
+                    b.Navigation("SenderUser");
+                });
+
             modelBuilder.Entity("IdentityManagerServerApi.Models.Student", b =>
                 {
                     b.HasOne("IdentityManagerServerApi.Data.ApplicationUser", "User")
@@ -771,6 +818,10 @@ namespace IdentityManagerServerApi.Migrations
                     b.Navigation("Patients");
 
                     b.Navigation("Posts");
+
+                    b.Navigation("ReceivedRatings");
+
+                    b.Navigation("SentRatings");
 
                     b.Navigation("Students");
                 });

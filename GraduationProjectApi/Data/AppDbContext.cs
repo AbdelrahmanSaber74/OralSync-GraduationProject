@@ -121,6 +121,23 @@ namespace IdentityManagerServerApi.Data
 
 
 
+
+
+
+
+            // Define one-to-many relationship between ApplicationUser and Rating
+            modelBuilder.Entity<Rating>()
+                .HasOne(r => r.RatedUser)
+                .WithMany(u => u.ReceivedRatings)
+                .HasForeignKey(r => r.RatedUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Rating>()
+                .HasOne(r => r.SenderUser)
+                .WithMany(u => u.SentRatings)
+                .HasForeignKey(r => r.SenderUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
