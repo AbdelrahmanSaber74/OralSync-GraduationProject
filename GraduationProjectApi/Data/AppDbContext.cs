@@ -32,6 +32,7 @@ namespace IdentityManagerServerApi.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<ContactUs> ContactUs { get; set; }
 
 
 

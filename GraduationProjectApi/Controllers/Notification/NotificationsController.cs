@@ -38,18 +38,23 @@ namespace GraduationProjectApi.Controllers._Posts
             {
                 // Query the database for notifications for the current user
                 var notifications = _db.Notifications
-                    .Where(n => n.UserId == userId)
-                    .Select(n => new
-                    {
-                        n.NotificationId,
-                        n.SenderUserId,
-                        n.PostId,
-                        Type = n.Type.ToString(), // Convert enum to string
-                        n.IsRead,
-                        n.DateCreated,
-                        n.TimeCreated
-                    })
-                    .ToList();
+                     .Where(n => n.UserId == userId)
+                     .Join(
+                         _db.Users,
+                         notification => notification.SenderUserId,
+                         user => user.Id,
+                         (notification, user) => new
+                         {
+                             notification.NotificationId,
+                             Sender = user.UserName, 
+                             notification.PostId,
+                             Type = notification.Type.ToString(),
+                             notification.IsRead,
+                             notification.DateCreated,
+                             notification.TimeCreated
+                         })
+                         .ToList();
+
 
                 return Ok(notifications);
             }
