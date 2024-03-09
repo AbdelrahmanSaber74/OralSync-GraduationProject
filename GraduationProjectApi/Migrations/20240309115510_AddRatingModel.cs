@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -20,7 +19,9 @@ namespace IdentityManagerServerApi.Migrations
                     RatedUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SenderUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateCreated = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    TimeCreated = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {

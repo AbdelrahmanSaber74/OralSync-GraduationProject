@@ -17,10 +17,10 @@ namespace GraduationProjectApi.Models
 
         public string Message { get; set; }
 
-        [StringLength(50)] // Limit the message to 500 characters
+        [StringLength(50)] // Limit the message to 50 characters
         public string DateCreated { get; set; }
 
-        [StringLength(50)] // Limit the message to 500 characters
+        [StringLength(50)] // Limit the message to 50 characters
         public string TimeCreated { get; set; }
     }
 }

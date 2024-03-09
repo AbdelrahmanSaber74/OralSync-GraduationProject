@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityManagerServerApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240309114046_AddRatingModel")]
+    [Migration("20240309115510_AddRatingModel")]
     partial class AddRatingModel
     {
         /// <inheritdoc />
@@ -437,8 +437,14 @@ namespace IdentityManagerServerApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RatingId"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DateCreated")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("RatedUserId")
                         .IsRequired()
@@ -447,6 +453,11 @@ namespace IdentityManagerServerApi.Migrations
                     b.Property<string>("SenderUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TimeCreated")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Value")
                         .HasColumnType("int");

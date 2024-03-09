@@ -7,7 +7,7 @@ namespace IdentityManagerServerApi.Models
 {
     public class Rating
     {
-        [Key]   
+        [Key]
         public int RatingId { get; set; }
 
         // ID of the user who is being rated (receiver)
@@ -19,7 +19,15 @@ namespace IdentityManagerServerApi.Models
         [Range(1, 5)]
         public int Value { get; set; } // Assuming the rating scale is from 1 to 5
 
-        public DateTime CreatedAt { get; set; }
+
+        // Comment provided by the sender
+        public string Comment { get; set; }
+
+        [StringLength(50)] // Limit the message to 50 characters
+        public string DateCreated { get; set; }
+
+        [StringLength(50)] // Limit the message to 50 characters
+        public string TimeCreated { get; set; }
 
 
         // Navigation property for the rated user (receiver)
@@ -29,7 +37,5 @@ namespace IdentityManagerServerApi.Models
         // Navigation property for the sender user
         [ForeignKey("SenderUserId")]
         public virtual ApplicationUser SenderUser { get; set; }
-
-
     }
 }
