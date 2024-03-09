@@ -16,9 +16,9 @@ namespace IdentityManagerServerApi.Migrations
                 {
                     ContactUsId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FullName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     TimeCreated = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)

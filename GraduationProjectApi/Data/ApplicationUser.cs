@@ -12,8 +12,8 @@ namespace IdentityManagerServerApi.Data
 
 
         public string? ProfileImage { get; set; }
-        public bool IsActive { get; set; } 
-
+        public bool IsActive { get; set; }
+        public int Rate { get; set; } = 3 ;
         public DateTime TimeAddUser { get; set; }
 
 
