@@ -14,17 +14,18 @@ namespace GraduationProjectApi.Controllers._Posts
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class GetPostByIdController : ControllerBase
+    public class GetAllPostController : ControllerBase
     {
         private readonly AppDbContext _db;
+        private const int PageSize = 10;
 
-        public GetPostByIdController(AppDbContext db)
+        public GetAllPostController(AppDbContext db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
         [HttpGet]
-        public IActionResult Get(int postId)
+        public IActionResult Get(int page = 1)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -36,8 +37,11 @@ namespace GraduationProjectApi.Controllers._Posts
             string hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
             var posts = _db.Posts
-                .Where(m => m.UserId == userId && m.PostId == postId && m.IsVisible)
+                .Where(m => m.IsVisible)
                 .Include(post => post.User)
+                .OrderByDescending(p => p.DateCreated)
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
                 .Select(p => new
                 {
                     p.PostId,
@@ -61,8 +65,6 @@ namespace GraduationProjectApi.Controllers._Posts
             }
 
             return Ok(new object[0]);
-
-
         }
     }
 }

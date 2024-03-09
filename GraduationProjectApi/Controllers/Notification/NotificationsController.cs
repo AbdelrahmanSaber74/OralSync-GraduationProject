@@ -46,7 +46,7 @@ namespace GraduationProjectApi.Controllers._Posts
                          (notification, user) => new
                          {
                              notification.NotificationId,
-                             Sender = user.UserName, 
+                             Sender = user.Name, 
                              notification.PostId,
                              Type = notification.Type.ToString(),
                              notification.IsRead,

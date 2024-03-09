@@ -13,7 +13,7 @@ namespace GraduationProjectApi.Controllers._Posts
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin, Doctor, Student")]
+    [Authorize]
     public class GetAllPostsByUserController : ControllerBase
     {
         private readonly AppDbContext _db;
