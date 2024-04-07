@@ -465,7 +465,7 @@ namespace IdentityManagerServerApi.Migrations
 
                     b.HasIndex("SenderUserId");
 
-                    b.ToTable("Rating");
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("IdentityManagerServerApi.Models.Student", b =>

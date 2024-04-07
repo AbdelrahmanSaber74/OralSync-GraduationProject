@@ -14,101 +14,107 @@ namespace IdentityManagerServerApi.Repositories
 {
    public class AccountRepository(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration config) : IUserAccount
     {
-        
-        public async Task<GeneralResponse> CreateAccount(UserDTO userDTO)
+        public Task<GeneralResponse> CreateAccount(UserDTO userDTO)
         {
-
-
-            if (userDTO is null) return new GeneralResponse(false, "Model is empty");
-            var newUser = new ApplicationUser()
-            {
-                Name = userDTO.Name,
-                Email = userDTO.Email,
-                PasswordHash = userDTO.Password,
-                UserName = userDTO.Email,
-                PhoneNumber = userDTO.PhoneNumber,
-                TimeAddUser = DateTime.Now,
-
-        };
-            var user = await userManager.FindByEmailAsync(newUser.Email);
-            if (user is not null) return new GeneralResponse(false, "User registered already");
-
-            var createUser = await userManager.CreateAsync(newUser!, userDTO.Password);
-           if (!createUser.Succeeded) return new GeneralResponse(false, "Error occured.. please try again");
-
-
-
-
-            //Assign Default Role : Admin to first registrar; rest is user
-            var checkAdmin = await roleManager.FindByNameAsync("Admin");
-            if (checkAdmin is null)
-            {
-                await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
-                await userManager.AddToRoleAsync(newUser, "Admin");
-                return new GeneralResponse(true, "Account Created");
-            }
-
-
-            else if (userDTO.IsDoctor)
-            {
-                var checkUser = await roleManager.FindByNameAsync("Doctor");
-                if (checkUser is null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = "Doctor" });
-
-
-                await userManager.AddToRoleAsync(newUser, "Doctor");
-                return new GeneralResponse(true, "Account Created");
-            }
-            else if (userDTO.IsStudent)
-            {
-                var checkUser = await roleManager.FindByNameAsync("Student");
-                if (checkUser is null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = "Student" });
-
-                await userManager.AddToRoleAsync(newUser, "Student");
-                return new GeneralResponse(true, "Account Created");
-            }
-
-            else if (userDTO.IsPatient)
-            {
-                var checkUser = await roleManager.FindByNameAsync("Patient");
-                if (checkUser is null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = "Patient" });
-
-                await userManager.AddToRoleAsync(newUser, "Patient");
-                return new GeneralResponse(true, "Account Created");
-            }
-
-
-            else 
-            {
-
-                return new GeneralResponse(false, "Account Not Created Please Select User");
-
-            }
-
-
-
-
+            throw new NotImplementedException();
         }
 
+        //public async Task<GeneralResponse> CreateAccount(UserDTO userDTO)
+        //{
 
-            public async Task<GeneralResponse> CreateAccountSpecial(SpecialDTO specialDTO)
+
+        //    if (userDTO is null) return new GeneralResponse(false, "Model is empty");
+        //    var newUser = new ApplicationUser()
+        //    {
+        //        Name = userDTO.Name,
+        //        Email = userDTO.Email,
+        //        PasswordHash = userDTO.Password,
+        //        NormalizedUserName = userDTO.Email,
+        //        PhoneNumber = userDTO.PhoneNumber,
+        //        TimeAddUser = DateTime.Now,
+
+        //    };
+        //    var user = await userManager.FindByEmailAsync(newUser.Email);
+        //    if (user is not null) return new GeneralResponse(false, "User registered already");
+
+        //    var createUser = await userManager.CreateAsync(newUser!, userDTO.Password);
+        //    if (!createUser.Succeeded) return new GeneralResponse(false, "Error occured.. please try again");
+
+
+
+
+        //    Assign Default Role: Admin to first registrar; rest is user
+        //    var checkAdmin = await roleManager.FindByNameAsync("Admin");
+        //    if (checkAdmin is null)
+        //    {
+        //        await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
+        //        await userManager.AddToRoleAsync(newUser, "Admin");
+        //        return new GeneralResponse(true, "Account Created");
+        //    }
+
+
+        //    else if (userDTO.IsDoctor)
+        //    {
+        //        var checkUser = await roleManager.FindByNameAsync("Doctor");
+        //        if (checkUser is null)
+        //            await roleManager.CreateAsync(new IdentityRole() { Name = "Doctor" });
+
+
+        //        await userManager.AddToRoleAsync(newUser, "Doctor");
+        //        return new GeneralResponse(true, "Account Created");
+        //    }
+        //    else if (userDTO.IsStudent)
+        //    {
+        //        var checkUser = await roleManager.FindByNameAsync("Student");
+        //        if (checkUser is null)
+        //            await roleManager.CreateAsync(new IdentityRole() { Name = "Student" });
+
+        //        await userManager.AddToRoleAsync(newUser, "Student");
+        //        return new GeneralResponse(true, "Account Created");
+        //    }
+
+        //    else if (userDTO.IsPatient)
+        //    {
+        //        var checkUser = await roleManager.FindByNameAsync("Patient");
+        //        if (checkUser is null)
+        //            await roleManager.CreateAsync(new IdentityRole() { Name = "Patient" });
+
+        //        await userManager.AddToRoleAsync(newUser, "Patient");
+        //        return new GeneralResponse(true, "Account Created");
+        //    }
+
+
+        //    else
+        //    {
+
+        //        return new GeneralResponse(false, "Account Not Created Please Select User");
+
+        //    }
+
+
+
+
+        //}
+
+
+        public async Task<GeneralResponse> CreateAccountSpecial(SpecialDTO specialDTO)
              {
-            if (specialDTO is null)
+                if (specialDTO is null)
                 return new GeneralResponse(false, "Model is empty");
 
 
 
             string defaultImage = specialDTO.IsMale ? "male.png" : "female.png";
 
+
+
             var newUser = new ApplicationUser()
             {
-                Name = specialDTO.FirstName + "_" + specialDTO.LastName,
+                Name = specialDTO.FirstName + " " + specialDTO.LastName,
                 Email = specialDTO.Email,
                 PasswordHash = specialDTO.Password,
-                UserName = specialDTO.Email,
                 PhoneNumber = specialDTO.PhoneNumber,
+                UserName = specialDTO.Email,
                 IsActive = true ,
                 ProfileImage = $"/Profile/default/{defaultImage}" ,
                 TimeAddUser = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time")),
@@ -119,8 +125,20 @@ namespace IdentityManagerServerApi.Repositories
             var user = await userManager.FindByEmailAsync(newUser.Email);
             if (user is not null) return new GeneralResponse(false, "User registered already");
 
+            //var createUser = await userManager.CreateAsync(newUser!, specialDTO.Password);
+            //if (!createUser.Succeeded) return new GeneralResponse(false, "Error occured.. please try again");
+
             var createUser = await userManager.CreateAsync(newUser!, specialDTO.Password);
-            if (!createUser.Succeeded) return new GeneralResponse(false, "Error occured.. please try again");
+
+            if (!createUser.Succeeded)
+            {
+                // Build an error message with details of each error
+                var errors = string.Join(", ", createUser.Errors.Select(e => e.Description));
+
+                // Log or handle the errors as needed
+                // For simplicity, let's just return the detailed error message
+                return new GeneralResponse(false, $"Error occurred: {errors}");
+            }
 
 
 
@@ -177,7 +195,6 @@ namespace IdentityManagerServerApi.Repositories
 
 
 
-        //CreateAccountSpecial//////////////////
 
 
 
@@ -218,27 +235,14 @@ namespace IdentityManagerServerApi.Repositories
                 issuer: config["Jwt:Issuer"],
                 audience: config["Jwt:Audience"],
                 claims: userClaims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddDays(50),
                 signingCredentials: credentials
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
 
-        static DateTime GetTimeInEgypt()
-        {
-            // Get the time zone for Egypt
-            TimeZoneInfo egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
-
-            // Convert the current UTC time to Egypt time
-            DateTime timeInEgypt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, egyptTimeZone);
-
-            return timeInEgypt;
-        }
-
-
-
-
+      
 
     }
 }

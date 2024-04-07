@@ -10,6 +10,9 @@ namespace SharedClassLibrary.GenericModels
     {
         public static ClaimsPrincipal SetClaimPrincipal(UserSession model)
         {
+
+          
+
             return new ClaimsPrincipal(new ClaimsIdentity(
                 new List<Claim>
                 {

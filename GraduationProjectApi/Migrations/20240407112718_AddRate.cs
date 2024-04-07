@@ -5,13 +5,13 @@
 namespace IdentityManagerServerApi.Migrations
 {
     /// <inheritdoc />
-    public partial class AddRatingModel : Migration
+    public partial class AddRate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Rating",
+                name: "Ratings",
                 columns: table => new
                 {
                     RatingId = table.Column<int>(type: "int", nullable: false)
@@ -25,15 +25,15 @@ namespace IdentityManagerServerApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rating", x => x.RatingId);
+                    table.PrimaryKey("PK_Ratings", x => x.RatingId);
                     table.ForeignKey(
-                        name: "FK_Rating_AspNetUsers_RatedUserId",
+                        name: "FK_Ratings_AspNetUsers_RatedUserId",
                         column: x => x.RatedUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Rating_AspNetUsers_SenderUserId",
+                        name: "FK_Ratings_AspNetUsers_SenderUserId",
                         column: x => x.SenderUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -41,13 +41,13 @@ namespace IdentityManagerServerApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rating_RatedUserId",
-                table: "Rating",
+                name: "IX_Ratings_RatedUserId",
+                table: "Ratings",
                 column: "RatedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rating_SenderUserId",
-                table: "Rating",
+                name: "IX_Ratings_SenderUserId",
+                table: "Ratings",
                 column: "SenderUserId");
         }
 
@@ -55,7 +55,7 @@ namespace IdentityManagerServerApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Rating");
+                name: "Ratings");
         }
     }
 }

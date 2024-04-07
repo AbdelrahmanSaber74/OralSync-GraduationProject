@@ -5,9 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.Contracts;
 using SharedClassLibrary.DTOs;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace IdentityManagerServerApi.Controllers.AccountController
 {
@@ -31,8 +28,6 @@ namespace IdentityManagerServerApi.Controllers.AccountController
         [HttpPost]
         public async Task<IActionResult> Register(SpecialDTO specialDTO)
         {
-
-
 
 
 

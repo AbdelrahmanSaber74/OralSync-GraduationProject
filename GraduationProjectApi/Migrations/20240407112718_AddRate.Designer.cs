@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityManagerServerApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240309115510_AddRatingModel")]
-    partial class AddRatingModel
+    [Migration("20240407112718_AddRate")]
+    partial class AddRate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -468,7 +468,7 @@ namespace IdentityManagerServerApi.Migrations
 
                     b.HasIndex("SenderUserId");
 
-                    b.ToTable("Rating");
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("IdentityManagerServerApi.Models.Student", b =>

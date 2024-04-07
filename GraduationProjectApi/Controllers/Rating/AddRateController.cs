@@ -33,6 +33,7 @@ namespace GraduationProjectApi.Controllers.Rating
                 {
                     return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "Rated user not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
                 }
+                
 
                 var ratedUser = _db.Users.FirstOrDefault(u => u.Id == Rating.RatedUserId);
 
@@ -41,7 +42,7 @@ namespace GraduationProjectApi.Controllers.Rating
                 {
                     return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "Rated user not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
                 }
-             
+
                 // Create a new Rating entity
                 var newRating = new IdentityManagerServerApi.Models.Rating
                 {
@@ -52,6 +53,8 @@ namespace GraduationProjectApi.Controllers.Rating
                     DateCreated = DateTimeHelper.FormatDate(DateTime.Now),
                     TimeCreated = DateTimeHelper.FormatTime(DateTime.Now)
                 };
+
+
 
                 // Add the new rating to the database
                 _db.Add(newRating);
@@ -64,7 +67,7 @@ namespace GraduationProjectApi.Controllers.Rating
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { StatusCode = 500, MessageEn = "An error occurred while processing the request", MessageAr = "حدث خطأ أثناء معالجة الطلب" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { StatusCode = 500, MessageEn = $"An error occurred while processing the request{ex.InnerException}", MessageAr = "حدث خطأ أثناء معالجة الطلب" });
             }
 
 

@@ -36,10 +36,15 @@ namespace GraduationProjectApi.Controllers._Posts
 
             string hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
-            var posts = _db.Posts
+            var query = _db.Posts
                 .Where(m => m.IsVisible)
                 .Include(post => post.User)
-                .OrderByDescending(p => p.DateCreated)
+                .OrderByDescending(p => p.DateCreated);
+
+            var totalPosts = query.Count();
+            var totalPages = (int)Math.Ceiling((double)totalPosts / PageSize);
+
+            var posts = query
                 .Skip((page - 1) * PageSize)
                 .Take(PageSize)
                 .Select(p => new
@@ -61,10 +66,16 @@ namespace GraduationProjectApi.Controllers._Posts
 
             if (posts.Count > 0)
             {
-                return Ok(posts);
+                var result = new
+                {
+                    TotalPosts = totalPosts,
+                    TotalPages = totalPages,
+                    Posts = posts
+                };
+                return Ok(result);
             }
 
-            return Ok(new object[0]);
+            return Ok(new { TotalPosts = totalPosts, TotalPages = totalPages, Posts = new object[0] });
         }
     }
 }
