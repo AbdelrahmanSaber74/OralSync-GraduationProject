@@ -32,6 +32,10 @@ namespace GraduationProjectApi.Controllers
             // Get user id from claims
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+
+            // Get user id from claims
+            var userName = User.FindFirst(ClaimTypes.Name)?.Value;
+
             // Validate user id
             if (string.IsNullOrEmpty(userId))
                 return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
@@ -39,10 +43,20 @@ namespace GraduationProjectApi.Controllers
 
             var post = _db.Posts.Where(m => m.PostId == commentDto.PostId).FirstOrDefault();
 
+
+            // Check if the post exists
+            if (post == null)
+            {
+                // Return a not found response
+                return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "Post not found", MessageAr = "لم يتم العثور على المنشور" });
+            }
+
+
             //Map the DTO to the Comment entity
             var comment = new Comment
            {
                UserId = userId,
+               Name = userName,
                PostId = commentDto.PostId ,
                Content = commentDto.Content,
                Title = commentDto.Title,

@@ -11,6 +11,10 @@ namespace IdentityManagerServerApi.Models
         public int CommentId { get; set; }
 
         [Required]
+        [MaxLength(250)]
+        public string Name { get; set; }
+
+        [Required]
         public string Content { get; set; }
 
         [Required]

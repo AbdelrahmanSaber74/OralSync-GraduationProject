@@ -6,20 +6,32 @@ namespace SharedClassLibrary.Helper
     {
         public static string FormatDate(DateTime dateTime)
         {
-            return dateTime.ToString("yyyy/MM/dd");
+            // Convert the given DateTime value to Egypt time zone
+            DateTime dateTimeInEgyptTimeZone = ConvertToEgyptTimeZone(dateTime);
+
+            // Format the date in "yyyy/MM/dd" format
+            return dateTimeInEgyptTimeZone.ToString("yyyy/MM/dd");
         }
 
         public static string FormatTime(DateTime dateTime)
         {
-            return dateTime.ToString("HH:mm:ss");
+            // Convert the given DateTime value to Egypt time zone
+            DateTime dateTimeInEgyptTimeZone = ConvertToEgyptTimeZone(dateTime);
+
+            // Format the time in "HH:mm:ss" format
+            return dateTimeInEgyptTimeZone.ToString("HH:mm:ss");
         }
 
-        // Additional method to get time in a specific time zone
-        public static DateTime GetTimeInTimeZone(string timeZoneId)
+        // Method to convert a DateTime value to Egypt time zone
+        private static DateTime ConvertToEgyptTimeZone(DateTime dateTime)
         {
-            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-            DateTime timeInTimeZone = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
-            return timeInTimeZone;
+            // Find Egypt time zone
+            TimeZoneInfo egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
+
+            // Convert the given DateTime value to Egypt time zone
+            DateTime dateTimeInEgyptTimeZone = TimeZoneInfo.ConvertTime(dateTime, egyptTimeZone);
+
+            return dateTimeInEgyptTimeZone;
         }
     }
 }

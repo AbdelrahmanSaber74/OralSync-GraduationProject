@@ -4,6 +4,8 @@ namespace SharedClassLibrary.DTOs
 {
     public class CommentDTO
     {
+
+        
         [Required(ErrorMessage = "Title is required.")]
         public string Title { get; set; }
 
