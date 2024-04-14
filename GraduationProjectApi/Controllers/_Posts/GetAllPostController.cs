@@ -52,6 +52,7 @@ namespace GraduationProjectApi.Controllers._Posts
 
 
                         var posts = query
+                    .Where(m => m.IsVisible)
                    .Skip((page - 1) * PageSize)
                    .Take(PageSize)
                    .Join(
@@ -77,6 +78,7 @@ namespace GraduationProjectApi.Controllers._Posts
                                .Select(comment => new
                                {
                                    comment.CommentId,
+                                   comment.User.Name,
                                    comment.Content,
                                    comment.Title,
                                    comment.DateCreated,

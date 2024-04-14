@@ -3,13 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GraduationProjectApi.Models;
 using System;
-using System.IO;
 using System.Linq;
-using IdentityManagerServerApi.Data;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using IdentityManagerServerApi.Data;
 
-namespace GraduationProjectApi.Controllers._Posts
+namespace GraduationProjectApi.Controllers.Posts
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -18,49 +17,57 @@ namespace GraduationProjectApi.Controllers._Posts
     {
         private readonly AppDbContext _db;
 
-        public GetAllPostByUserIdController (AppDbContext db)
+        public GetAllPostByUserIdController(AppDbContext db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
         [HttpGet]
-        public IActionResult Get(string userId)
+        public async Task<IActionResult> Get(string userId = null)
         {
-
             if (string.IsNullOrEmpty(userId))
             {
-                return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
+                return NotFound(new { StatusCode = 404, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
             }
 
-            string hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+            var hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
-            var posts = _db.Posts
+            var posts = await _db.Posts
                 .Where(m => m.IsVisible && m.UserId == userId)
                 .Include(post => post.User)
                 .OrderByDescending(p => p.DateCreated)
-                .Select(p => new
+                .Select(post => new
                 {
-                    p.PostId,
-                    UserName = p.User.Name,
-                    p.Title,
-                    p.Content,
-                    p.DateCreated,
-                    p.DateUpdated,
-                    p.TimeCreated,
-                    p.TimeUpdated,
-                    p.UserId,
-                    p.Comments,
-                    LikeCount = p.Likes.Count,
-                    Image = p.Image.Select(image => hostUrl + image).ToList()
+                    post.PostId,
+                    UserName = post.User.Name,
+                    ProfileImage = hostUrl + post.User.ProfileImage,
+                    post.Title,
+                    post.Content,
+                    post.DateCreated,
+                    post.DateUpdated,
+                    post.TimeCreated,
+                    post.TimeUpdated,
+                    post.UserId,
+                    LikeCount = post.Likes.Count,
+                    PostImages = post.Image.Select(image => hostUrl + image).ToList(),
+                    Comments = post.Comments.Select(comment => new
+                    {
+                        comment.CommentId,
+                        comment.User.Name,
+                        comment.Content,
+                        comment.Title,
+                        comment.DateCreated,
+                        comment.TimeCreated,
+                        comment.DateUpdated,
+                        comment.TimeUpdated,
+                        comment.UserId,
+                        comment.PostId,
+                        ProfileImage = hostUrl + comment.User.ProfileImage,
+                    }).ToList()
                 })
-                .ToList();
+                .ToListAsync();
 
-            if (posts.Count > 0)
-            {
-                return Ok(posts);
-            }
-
-            return Ok(new object[0]);
+            return Ok(posts);
         }
     }
 }
