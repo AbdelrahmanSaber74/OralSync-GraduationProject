@@ -39,7 +39,7 @@ namespace GraduationProjectApi.Controllers.Posts
             var posts = await _db.Posts
                 .Where(m => m.IsVisible && m.UserId == userId)
                 .Include(post => post.User)
-                .OrderByDescending(p => p.DateCreated)
+                .OrderByDescending(p => p.PostId)
                 .Select(post => new
                 {
                     post.PostId,

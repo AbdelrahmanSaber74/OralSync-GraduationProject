@@ -42,7 +42,7 @@ namespace GraduationProjectApi.Controllers._Posts
             var query = _db.Posts
                 .Where(m => m.IsVisible)
                 .Include(post => post.User)
-                .OrderByDescending(p => p.DateCreated);
+                .OrderByDescending(p => p.PostId);
 
             var totalPosts = query.Count();
             var totalPages = (int)Math.Ceiling((double)totalPosts / PageSize);

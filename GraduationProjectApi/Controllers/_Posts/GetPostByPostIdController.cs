@@ -31,6 +31,7 @@ namespace GraduationProjectApi.Controllers.Posts
             var post = await _db.Posts
                 .Where(m => m.PostId == postId && m.IsVisible)
                 .Include(post => post.User)
+                 .OrderByDescending(p => p.PostId)
                 .Select(p => new
                 {
                     p.PostId,
