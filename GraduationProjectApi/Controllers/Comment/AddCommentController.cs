@@ -10,6 +10,8 @@ using System.Security.Claims;
 using SharedClassLibrary.Helper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Hosting;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace GraduationProjectApi.Controllers
 {
@@ -18,11 +20,17 @@ namespace GraduationProjectApi.Controllers
     public class AddCommentController : ControllerBase
     {
         private readonly AppDbContext _db;
+        private readonly JsonSerializerOptions _jsonOptions;
 
         public AddCommentController(AppDbContext db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
+            _jsonOptions = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve
+            };
         }
+
 
         [HttpPost]
         [Authorize]
@@ -89,11 +97,29 @@ namespace GraduationProjectApi.Controllers
             _db.SaveChanges();
 
 
+            var responseData = new
+            {
+                CommentId = comment.CommentId,
+                Name = comment.Name,
+                Content = comment.Content,
+                Title = comment.Title,
+                DateCreated = comment.DateCreated,
+                TimeCreated = comment.TimeCreated,
+                DateUpdated = comment.DateUpdated,
+                TimeUpdated = comment.TimeUpdated,
+                UserId = comment.UserId,
+                PostId = comment.PostId
+            };
+
+
+            // Serialize the anonymous object and return it
+            return Ok(JsonSerializer.Serialize(responseData, _jsonOptions));
+
 
 
 
             //Return a success response
-            return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Comment added successfully", MessageAr = "تم إضافة التعليق بنجاح" });
+            //return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Comment added successfully", MessageAr = "تم إضافة التعليق بنجاح" });
         }
     }
 }

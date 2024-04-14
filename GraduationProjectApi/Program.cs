@@ -33,6 +33,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddSignInManager()
     .AddRoles<IdentityRole>();
 
+
 // JWT 
 builder.Services.AddAuthentication(options =>
 {

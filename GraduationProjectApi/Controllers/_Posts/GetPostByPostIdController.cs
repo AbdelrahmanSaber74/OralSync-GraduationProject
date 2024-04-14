@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GraduationProjectApi.Models;
 using System;
-using System.IO;
 using System.Linq;
 using IdentityManagerServerApi.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Threading.Tasks; // Add this namespace for Task
 
-namespace GraduationProjectApi.Controllers._Posts
+namespace GraduationProjectApi.Controllers.Posts
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -24,14 +24,12 @@ namespace GraduationProjectApi.Controllers._Posts
         }
 
         [HttpGet]
-        public IActionResult Get(int postId)
+        public async Task<IActionResult> Get(int postId)
         {
-          
-
             string hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
-            var posts = _db.Posts
-                .Where(m=> m.PostId == postId && m.IsVisible)
+            var post = await _db.Posts
+                .Where(m => m.PostId == postId && m.IsVisible)
                 .Include(post => post.User)
                 .Select(p => new
                 {
@@ -44,20 +42,31 @@ namespace GraduationProjectApi.Controllers._Posts
                     p.TimeCreated,
                     p.TimeUpdated,
                     p.UserId,
-                    p.Comments,
+                    Comments = p.Comments.Select(comment => new
+                    {
+                        comment.CommentId,
+                        UserName = comment.User.Name,
+                        comment.Content,
+                        comment.Title,
+                        comment.DateCreated,
+                        comment.DateUpdated,
+                        comment.TimeCreated,
+                        comment.TimeUpdated,
+                        comment.UserId,
+                        comment.PostId,
+                        ProfileImage = hostUrl + comment.User.ProfileImage,
+                    }).ToList(),
                     LikeCount = p.Likes.Count,
                     Image = p.Image.Select(image => hostUrl + image).ToList()
                 })
-                .ToList();
+                .FirstOrDefaultAsync();
 
-            if (posts.Count > 0)
+            if (post != null)
             {
-                return Ok(posts);
+                return Ok(post);
             }
 
-            return Ok(new object[0]);
-
-
+            return NotFound(new { StatusCode = 404, MessageEn = "Post ID not found", MessageAr = "لم يتم العثور على المنشور" });
         }
     }
 }
