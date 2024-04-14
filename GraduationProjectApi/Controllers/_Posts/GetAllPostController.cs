@@ -104,6 +104,7 @@ namespace GraduationProjectApi.Controllers._Posts
                 {
                     TotalPosts = totalPosts,
                     TotalPages = totalPages,
+                    currentPage = page,
                     Posts = posts
                 };
                 return Ok(result);
