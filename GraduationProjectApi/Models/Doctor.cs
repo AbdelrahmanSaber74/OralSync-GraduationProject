@@ -29,13 +29,17 @@ public class Doctor
 
     public double? GPA { get; set; }
 
-    public List<string>? ClinicAddress { get; set; }
-
     public string? ClinicNumber { get; set; }
-  
-    public List<string>? InsuranceCompanies { get; set; }
 
-    public List<string>? Certificates { get; set; }
+    // List of strings for clinic addresses
+    public List<string> ClinicAddresses { get; set; }
+
+    // List of strings for insurance companies
+    public List<string> InsuranceCompanies { get; set; }
+
+    // List of strings for certificates
+    public List<string> Certificates { get; set; }
+
 
     public string? GraduationDate { get; set; }
 
@@ -49,6 +53,13 @@ public class Doctor
 
     // Navigation property for the associated user
     public ApplicationUser User { get; set; }
+
+    public Doctor()
+    {
+        ClinicAddresses = new List<string>();
+        InsuranceCompanies = new List<string>();
+        Certificates = new List<string>();
+    }
 
 
 }

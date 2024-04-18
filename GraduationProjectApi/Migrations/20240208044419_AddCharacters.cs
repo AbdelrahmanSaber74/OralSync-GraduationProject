@@ -30,7 +30,7 @@ namespace IdentityManagerServerApi.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UniversityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GPA = table.Column<double>(type: "float", nullable: true),
-                    ClinicAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClinicAddresses = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClinicNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InsuranceCompanies = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Certificates = table.Column<string>(type: "nvarchar(max)", nullable: true),

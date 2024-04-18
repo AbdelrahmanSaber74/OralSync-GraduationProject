@@ -36,6 +36,7 @@ namespace IdentityManagerServerApi.Data
         public DbSet<Rating> Ratings { get; set; }
 
 
+   
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -47,6 +48,45 @@ namespace IdentityManagerServerApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+                modelBuilder.Entity<Doctor>()
+                 .Property(e => e.ClinicAddresses)
+                .HasColumnType("nvarchar(max)"); // Ensure the column type is NVARCHAR to support Unicode characters
+    
+
+            modelBuilder.Entity<Governorate>().HasData(
+                  new Governorate { Id = 1, Name = "القاهرة" },
+                  new Governorate { Id = 2, Name = "الإسكندرية" },
+                  new Governorate { Id = 3, Name = "البحيرة" },
+                  new Governorate { Id = 4, Name = "بورسعيد" },
+                  new Governorate { Id = 5, Name = "الإسماعيلية" },
+                  new Governorate { Id = 6, Name = "الغربية" },
+                  new Governorate { Id = 7, Name = "المنوفية" },
+                  new Governorate { Id = 8, Name = "الدقهلية" },
+                  new Governorate { Id = 9, Name = "كفر الشيخ" },
+                  new Governorate { Id = 10, Name = "شمال سيناء" },
+                  new Governorate { Id = 11, Name = "جنوب سيناء" },
+                  new Governorate { Id = 12, Name = "السويس" },
+                  new Governorate { Id = 13, Name = "الأقصر" },
+                  new Governorate { Id = 14, Name = "أسوان" },
+                  new Governorate { Id = 15, Name = "البحر الأحمر" },
+                  new Governorate { Id = 16, Name = "سوهاج" },
+                  new Governorate { Id = 17, Name = "قنا" },
+                  new Governorate { Id = 18, Name = "الفيوم" },
+                  new Governorate { Id = 19, Name = "بني سويف" },
+                  new Governorate { Id = 20, Name = "المنيا" },
+                  new Governorate { Id = 21, Name = "أسيوط" },
+                  new Governorate { Id = 22, Name = "دمياط" },
+                  new Governorate { Id = 23, Name = "الشرقية" },
+                  new Governorate { Id = 24, Name = "الجيزة" },
+                  new Governorate { Id = 25, Name = "الوادي الجديد" },
+                  new Governorate { Id = 26, Name = "سومة القناطر" },
+                  new Governorate { Id = 27, Name = "الأقصر" },
+                  new Governorate { Id = 28, Name = "الوادي الجديد" },
+                  new Governorate { Id = 29, Name = "أسوان" }
+                );
+
+
 
 
 

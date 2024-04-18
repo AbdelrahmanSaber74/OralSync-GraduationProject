@@ -111,7 +111,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 PhoneNumber = specialDTO.PhoneNumber,
                 Email = specialDTO.Email,
                 UniversityName = specialDTO.UniversityName,
-                ClinicAddress = specialDTO.ClinicAddress,
+                ClinicAddresses = specialDTO.ClinicAddress,
                 ClinicNumber = specialDTO.ClinicNumber,
                 GPA = specialDTO.GPA,   
                 GraduationDate = specialDTO.GraduationDate,

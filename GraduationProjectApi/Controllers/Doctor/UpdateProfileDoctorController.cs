@@ -58,7 +58,7 @@ namespace GraduationProjectApi.Controllers.Doctor
                 doctor.Email = doctorDTO.Email;
                 doctor.UniversityName = doctorDTO.UniversityName;
                 doctor.GPA = doctorDTO.GPA;
-                doctor.ClinicAddress = doctorDTO.ClinicAddress;
+                doctor.ClinicAddresses = doctorDTO.ClinicAddress;
                 doctor.ClinicNumber = doctorDTO.ClinicNumber;
                 doctor.InsuranceCompanies = doctorDTO.InsuranceCompanies;
                 doctor.Certificates = doctorDTO.Certificates;
