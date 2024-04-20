@@ -9,11 +9,11 @@ namespace IdentityManagerServerApi.Data
 
 
         public string Name { get; set; }
-
-
+        
         public string? ProfileImage { get; set; }
         public bool IsActive { get; set; }
         public DateTime TimeAddUser { get; set; }
+        public string?   Governorate { get; set; }
 
 
 

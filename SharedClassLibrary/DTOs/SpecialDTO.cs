@@ -59,6 +59,7 @@ namespace SharedClassLibrary.DTOs
         // Patient properties
         public List<string>? Address { get; set; }
         public string? InsuranceCompany { get; set; }
+        public string? Governorate { get; set; }
 
 
 
