@@ -1,7 +1,8 @@
 ﻿using IdentityManagerServerApi.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-namespace IdentityManagerServerApi.Models;
+
+namespace GraduationProjectApi.Models;
 
 public class Governorate
 {
