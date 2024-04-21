@@ -118,6 +118,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 BirthDate = specialDTO.BirthDate,
                 Certificates = specialDTO.Certificates,
                 InsuranceCompanies = specialDTO.InsuranceCompanies,
+                Governorate = specialDTO.Governorate,
                 UserId = userId,
 
             };
@@ -140,6 +141,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 AcademicYear = specialDTO.AcademicYear,
                 GPA = specialDTO.GPA,
                 BirthDate = specialDTO.BirthDate,
+                Governorate = specialDTO.Governorate,
                 UserId = userId,
             };
 
@@ -161,6 +163,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 Address = specialDTO.Address,
                 InsuranceCompany = specialDTO.InsuranceCompany,
                 BirthDate = specialDTO.BirthDate,
+                Governorate = specialDTO.Governorate,
                 UserId = userId,
             };
             _db.Patients.Add(newPatient);

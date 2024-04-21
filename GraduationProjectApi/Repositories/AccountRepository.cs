@@ -117,7 +117,6 @@ namespace IdentityManagerServerApi.Repositories
                 UserName = specialDTO.Email,
                 IsActive = true ,
                 ProfileImage = $"/Profile/default/{defaultImage}" ,
-                Governorate = specialDTO.Governorate,
                 TimeAddUser = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time")),
             };
 

@@ -48,7 +48,8 @@ public class Doctor
     [Required]  
     public string BirthDate { get; set; }
 
-
+    [Required]
+    public string Governorate { get; set; }
     public string UserId { get; set; }
 
     // Navigation property for the associated user
