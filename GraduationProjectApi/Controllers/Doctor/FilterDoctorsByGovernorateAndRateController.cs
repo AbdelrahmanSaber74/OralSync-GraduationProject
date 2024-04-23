@@ -1,4 +1,5 @@
-﻿using IdentityManagerServerApi.Data;
+﻿using GraduationProjectApi.Models;
+using IdentityManagerServerApi.Data;
 using IdentityManagerServerApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IdentityManagerServerApi.Controllers.AccountController
+namespace GraduationProjectApi.Controllers.Doctor
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -36,7 +37,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 var doctorsQuery = _db.Doctors.Where(d => d.Governorate == governorate);
 
                 var doctorsList = await doctorsQuery.ToListAsync();
-                var doctorsWithRate = new List<Doctor>();
+                var doctorsWithRate = new List<Models.Doctor>();
 
                 foreach (var doctor in doctorsList)
                 {

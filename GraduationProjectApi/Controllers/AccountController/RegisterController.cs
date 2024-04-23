@@ -1,4 +1,5 @@
-﻿using IdentityManagerServerApi.Data;
+﻿using GraduationProjectApi.Models;
+using IdentityManagerServerApi.Data;
 using IdentityManagerServerApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
