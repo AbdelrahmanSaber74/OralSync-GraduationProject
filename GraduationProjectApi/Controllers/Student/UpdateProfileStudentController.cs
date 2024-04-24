@@ -60,6 +60,7 @@ namespace GraduationProjectApi.Controllers.Students
                 student.GPA = studentDTO.GPA;
                 student.AcademicYear = studentDTO.AcademicYear;
                 student.BirthDate = studentDTO.BirthDate;
+                student.Governorate = studentDTO.Governorate;
 
                 // Update User entity
                 userstudent.Name = studentDTO.FirstName + "_" + studentDTO.LastName;
