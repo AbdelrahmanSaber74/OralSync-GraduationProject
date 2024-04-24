@@ -57,6 +57,7 @@ namespace GraduationProjectApi.Controllers.Students
                 patient.Address = patientDTO.Address;
                 patient.InsuranceCompany = patientDTO.InsuranceCompany;
                 patient.BirthDate = patientDTO.BirthDate;
+                patient.Governorate = patientDTO.Governorate;
 
                 // Update User entity
                 userPatient.Name = patientDTO.FirstName + "_" + patientDTO.LastName;

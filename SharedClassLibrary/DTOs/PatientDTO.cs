@@ -24,6 +24,7 @@ namespace SharedClassLibrary.DTOs
         public List<string>? Address { get; set; }
 
         public string? InsuranceCompany { get; set; }
+        public string Governorate { get; set; }
 
         [Required(ErrorMessage = "Birth date is required.")]
         public string BirthDate { get; set; }
