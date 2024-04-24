@@ -24,17 +24,16 @@ namespace GraduationProjectApi.Controllers.Doctor
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
         [HttpPost]
-        public async Task<IActionResult> Get(string governorate, double minRate = 0)
+        public async Task<IActionResult> Get(string governorate = null, double minRate = 0)
         {
             try
             {
-                if (string.IsNullOrEmpty(governorate))
+                IQueryable<GraduationProjectApi.Models.Doctor> doctorsQuery = _db.Doctors;
+
+                if (!string.IsNullOrEmpty(governorate))
                 {
-                    return BadRequest(new { StatusCode = 400, MessageEn = "Governorate parameter is required.", MessageAr = "المحافظة مطلوبة" });
-
+                    doctorsQuery = doctorsQuery.Where(d => d.Governorate == governorate);
                 }
-
-                var doctorsQuery = _db.Doctors.Where(d => d.Governorate == governorate);
 
                 var doctorsList = await doctorsQuery.ToListAsync();
                 var doctorsWithRate = new List<Models.Doctor>();
