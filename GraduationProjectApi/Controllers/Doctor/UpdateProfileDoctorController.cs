@@ -64,6 +64,7 @@ namespace GraduationProjectApi.Controllers.Doctor
                 doctor.Certificates = doctorDTO.Certificates;
                 doctor.GraduationDate = doctorDTO.GraduationDate;
                 doctor.BirthDate = doctorDTO.BirthDate;
+                doctor.Governorate = doctorDTO.Governorate;
 
 
                 // update Doctor In table Users

@@ -37,6 +37,7 @@ namespace SharedClassLibrary.DTOs
 
         [Required(ErrorMessage = "Birth date is required.")]
         public string BirthDate { get; set; }
+        public string Governorate { get; set; }
 
         public string? GraduationDate { get; set; }
     }
