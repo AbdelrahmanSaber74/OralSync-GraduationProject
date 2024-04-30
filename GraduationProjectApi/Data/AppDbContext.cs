@@ -35,6 +35,7 @@ namespace IdentityManagerServerApi.Data
         public DbSet<ContactUs> ContactUs { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Governorate> Governorate { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
 
    
