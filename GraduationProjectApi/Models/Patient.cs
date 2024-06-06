@@ -37,4 +37,5 @@ public class Patient
 
     public ApplicationUser User { get; set; }
 
+
 }

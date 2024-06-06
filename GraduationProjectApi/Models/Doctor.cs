@@ -1,4 +1,5 @@
 ﻿using IdentityManagerServerApi.Data;
+using IdentityManagerServerApi.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -51,5 +52,6 @@ namespace GraduationProjectApi.Models
 
         // Navigation property for the associated user
         public ApplicationUser User { get; set; }
+
     }
 }

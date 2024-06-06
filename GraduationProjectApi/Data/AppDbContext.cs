@@ -36,9 +36,10 @@ namespace IdentityManagerServerApi.Data
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Governorate> Governorate { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
 
 
-   
+
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -180,6 +181,9 @@ namespace IdentityManagerServerApi.Data
                 .WithMany(u => u.SentRatings)
                 .HasForeignKey(r => r.SenderUserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+
+
 
         }
     }
