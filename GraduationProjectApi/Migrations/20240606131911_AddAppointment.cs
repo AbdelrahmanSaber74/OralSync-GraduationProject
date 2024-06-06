@@ -5,7 +5,7 @@
 namespace IdentityManagerServerApi.Migrations
 {
     /// <inheritdoc />
-    public partial class AppointmentEntity : Migration
+    public partial class AddAppointment : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,6 +20,8 @@ namespace IdentityManagerServerApi.Migrations
                     PatientId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     TimeCreated = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    DateAppointment = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    TimeAppointment = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientNotes = table.Column<string>(type: "nvarchar(max)", nullable: false),

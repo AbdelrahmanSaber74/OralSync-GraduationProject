@@ -16,6 +16,15 @@ namespace IdentityManagerServerApi.Models
 
         [StringLength(50)] // Limit the message to 50 characters
         public string TimeCreated { get; set; }
+
+
+
+        [StringLength(50)] // Limit the message to 50 characters
+        public string DateAppointment { get; set; }
+
+        [StringLength(50)] // Limit the message to 50 characters
+        public string TimeAppointment { get; set; }
+
         public string Status { get; set; } // e.g., Scheduled, Completed, Cancelled
         public string Location { get; set; } // Location of the appointment
         public string PatientNotes { get; set; } // Notes added by the patient

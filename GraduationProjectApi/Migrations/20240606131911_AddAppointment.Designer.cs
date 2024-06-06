@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityManagerServerApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240606122206_AppointmentEntity")]
-    partial class AppointmentEntity
+    [Migration("20240606131911_AddAppointment")]
+    partial class AddAppointment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -470,6 +470,11 @@ namespace IdentityManagerServerApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("DateAppointment")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("DateCreated")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -505,6 +510,11 @@ namespace IdentityManagerServerApi.Migrations
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TimeAppointment")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("TimeCreated")
                         .IsRequired()

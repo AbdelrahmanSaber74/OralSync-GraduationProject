@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GraduationProjectApi.Models;
 using IdentityManagerServerApi.Data;
 using IdentityManagerServerApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GraduationProjectApi.Controllers.Appointments
 {
@@ -20,6 +21,7 @@ namespace GraduationProjectApi.Controllers.Appointments
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointments()
         {
             return await _context.Appointments.ToListAsync();
