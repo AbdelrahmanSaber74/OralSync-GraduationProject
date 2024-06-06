@@ -4,8 +4,8 @@ using IdentityManagerServerApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.Contracts;
-using SharedClassLibrary.DTOs;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,6 +23,7 @@ namespace GraduationProjectApi.Controllers.Doctor
             _userAccount = userAccount ?? throw new ArgumentNullException(nameof(userAccount));
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
+
         [HttpPost]
         public async Task<IActionResult> Get(string governorate = null, double minRate = 0)
         {
@@ -36,14 +37,18 @@ namespace GraduationProjectApi.Controllers.Doctor
                 }
 
                 var doctorsList = await doctorsQuery.ToListAsync();
-                var doctorsWithRate = new List<Models.Doctor>();
+                var doctorsWithRate = new List<object>();
 
                 foreach (var doctor in doctorsList)
                 {
                     var averageRate = await CalculateAverageRate(doctor.UserId); // Assuming UserId is the property representing the user ID
                     if (averageRate >= minRate)
                     {
-                        doctorsWithRate.Add(doctor);
+                        doctorsWithRate.Add(new
+                        {
+                            Doctor = doctor,
+                            AverageRate = averageRate
+                        });
                     }
                 }
 
@@ -55,8 +60,6 @@ namespace GraduationProjectApi.Controllers.Doctor
                 return StatusCode(StatusCodes.Status500InternalServerError, new { StatusCode = 500, MessageEn = "An error occurred while filtering doctors by governorate and rate.", MessageAr = "حدث خطأ أثناء تصفية الأطباء حسب المحافظة والتقييم." });
             }
         }
-
-
 
         private async Task<double> CalculateAverageRate(string userId)
         {
