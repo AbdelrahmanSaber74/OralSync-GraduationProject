@@ -10,11 +10,11 @@ namespace GraduationProjectApi.Controllers.Appointments
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GetAppointmentController : ControllerBase
+    public class GetAppointmentByIdController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public GetAppointmentController(AppDbContext context)
+        public GetAppointmentByIdController(AppDbContext context)
         {
             _context = context;
         }

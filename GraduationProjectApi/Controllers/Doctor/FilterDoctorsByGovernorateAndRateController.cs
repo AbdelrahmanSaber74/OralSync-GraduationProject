@@ -26,8 +26,7 @@ namespace GraduationProjectApi.Controllers.Doctor
         }
 
         [HttpPost]
-        [Authorize(Roles = "Doctor")]
-
+        [Authorize]
         public async Task<IActionResult> Get(string governorate = null, double minRate = 0)
         {
             try
@@ -41,15 +40,18 @@ namespace GraduationProjectApi.Controllers.Doctor
 
                 var doctorsList = await doctorsQuery.ToListAsync();
                 var doctorsWithRate = new List<object>();
+                string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
 
                 foreach (var doctor in doctorsList)
                 {
-                    var averageRate = await CalculateAverageRate(doctor.UserId); // Assuming UserId is the property representing the user ID
+                    var averageRate = await CalculateAverageRate(doctor.UserId);
                     if (averageRate >= minRate)
                     {
                         doctorsWithRate.Add(new
                         {
                             Doctor = doctor,
+                            profileImage  = hosturl + _db.Users.Where(m=>m.Id == doctor.UserId).Select(m=>m.ProfileImage).FirstOrDefault(),
+                            Name  = _db.Users.Where(m=>m.Id == doctor.UserId).Select(m=>m.Name).FirstOrDefault(),
                             AverageRate = averageRate
                         });
                     }
@@ -60,7 +62,12 @@ namespace GraduationProjectApi.Controllers.Doctor
             catch (Exception ex)
             {
                 // Log the exception for debugging
-                return StatusCode(StatusCodes.Status500InternalServerError, new { StatusCode = 500, MessageEn = "An error occurred while filtering doctors by governorate and rate.", MessageAr = "حدث خطأ أثناء تصفية الأطباء حسب المحافظة والتقييم." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    StatusCode = 500,
+                    MessageEn = $"An error occurred while filtering doctors by governorate and rate. {ex.Message}",
+                    MessageAr = "حدث خطأ أثناء تصفية الأطباء حسب المحافظة والتقييم."
+                });
             }
         }
 
