@@ -1,6 +1,7 @@
 ﻿using GraduationProjectApi.Models;
 using IdentityManagerServerApi.Data;
 using IdentityManagerServerApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.Contracts;
@@ -25,6 +26,8 @@ namespace GraduationProjectApi.Controllers.Doctor
         }
 
         [HttpPost]
+        [Authorize(Roles = "Doctor")]
+
         public async Task<IActionResult> Get(string governorate = null, double minRate = 0)
         {
             try
