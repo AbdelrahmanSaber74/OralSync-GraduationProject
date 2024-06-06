@@ -43,6 +43,8 @@ namespace GraduationProjectApi.Controllers.Appointments
                     Location = appointmentDto.Location,
                     DateCreated = DateTimeHelper.FormatDate(DateTime.Now),
                     TimeCreated = DateTimeHelper.FormatTime(DateTime.Now),
+                    DateAppointment = appointmentDto.DateAppointment,
+                    TimeAppointment = appointmentDto.TimeAppointment,
                     PatientNotes = appointmentDto.PatientNotes,
                     DoctorNotes = appointmentDto.DoctorNotes,
                     PaymentMethod = appointmentDto.PaymentMethod,

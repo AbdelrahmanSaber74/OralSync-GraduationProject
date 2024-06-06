@@ -35,6 +35,8 @@ namespace GraduationProjectApi.Controllers.Appointments
                 appointment.Status = appointmentUpdateDto.Status;
                 appointment.PatientNotes = appointmentUpdateDto.PatientNotes;
                 appointment.DoctorNotes = appointmentUpdateDto.DoctorNotes;
+                appointment.TimeAppointment = appointmentUpdateDto.TimeAppointment;
+                appointment.DateAppointment = appointmentUpdateDto.DateAppointment;
 
                 await _context.SaveChangesAsync();
 
