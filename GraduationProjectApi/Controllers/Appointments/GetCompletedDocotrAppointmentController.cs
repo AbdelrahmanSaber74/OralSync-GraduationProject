@@ -5,32 +5,37 @@ using GraduationProjectApi.Models;
 using IdentityManagerServerApi.Data;
 using IdentityManagerServerApi.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace GraduationProjectApi.Controllers.Appointments
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GetAppointmentController : ControllerBase
+    public class GetCompletedDocotrAppointmentController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public GetAppointmentController(AppDbContext context)
+        public GetCompletedDocotrAppointmentController(AppDbContext context)
         {
             _context = context;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         [Authorize]
-        public async Task<ActionResult<Appointment>> GetAppointment(int id)
+        public async Task<ActionResult<Appointment>> Get()
         {
-            var appointment = await _context.Appointments.FindAsync(id);
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var appointment = _context.Appointments.Where(m => m.DoctorId == userId && m.Status == "Completed").ToList();
 
             if (appointment == null)
             {
                 return NotFound(new { StatusCode = 404, MessageEn = "Appointment not found.", MessageAr = "الموعد غير موجود." });
             }
 
-            return appointment;
+            return Ok(appointment);
+
         }
     }
 }
