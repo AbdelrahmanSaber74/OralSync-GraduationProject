@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using GraduationProjectApi.Models;
 using IdentityManagerServerApi.Data;
 using IdentityManagerServerApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GraduationProjectApi.Controllers.Appointments
 {
@@ -19,13 +20,14 @@ namespace GraduationProjectApi.Controllers.Appointments
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Appointment>> GetAppointment(int id)
         {
             var appointment = await _context.Appointments.FindAsync(id);
 
             if (appointment == null)
             {
-                return NotFound();
+                return NotFound(new { StatusCode = 404, MessageEn = "Appointment not found.", MessageAr = "الموعد غير موجود." });
             }
 
             return appointment;
