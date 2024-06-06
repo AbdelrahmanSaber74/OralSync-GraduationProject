@@ -31,6 +31,13 @@ namespace GraduationProjectApi.Controllers.Appointments
                     return NotFound(new { StatusCode = 404, MessageEn = "Appointment not found.", MessageAr = "الموعد غير موجود." });
                 }
 
+                // Validate the status value
+                var validStatuses = new[] { "Scheduled", "Completed", "Cancelled" };
+                if (!validStatuses.Contains(appointmentUpdateDto.Status))
+                {
+                    return BadRequest(new { StatusCode = 400, MessageEn = "Invalid status value.", MessageAr = "قيمة الحالة غير صالحة." });
+                }
+
                 // Update appointment properties
                 appointment.Status = appointmentUpdateDto.Status;
                 appointment.PatientNotes = appointmentUpdateDto.PatientNotes;
