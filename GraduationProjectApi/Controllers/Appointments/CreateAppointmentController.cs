@@ -50,37 +50,30 @@ namespace GraduationProjectApi.Controllers.Appointments
 
 
 
-                ///////////////////////////////////////  Start Check Role Stduent Or Doctor ///////////////
-                var doctorOrStudent = await _userManager.FindByIdAsync(appointmentDto.DoctorId);
-                if (doctorOrStudent == null)
+                var appointments = await _context.Appointments
+                     .Where(a => a.PatientId == userId)
+                     .ToListAsync();
+
+                int countStudentAppointments = 0;
+
+                foreach (var appointt in appointments)
                 {
-                    return StatusCode(StatusCodes.Status402PaymentRequired, new { StatusCode = 402, MessageEn = "Doctor or student not found.", MessageAr = "لم يتم العثور على الطبيب أو الطالب." });
-                }
-
-                var roles = await _userManager.GetRolesAsync(doctorOrStudent);
-                var doctorOrStudentRole = roles.FirstOrDefault();
-
-                if (string.IsNullOrEmpty(doctorOrStudentRole))
-                {
-                    return StatusCode(StatusCodes.Status403Forbidden, new { StatusCode = 403, MessageEn = "Doctor or student role not found.", MessageAr = "لم يتم العثور على دور الطبيب أو الطالب." });
-                }
-
-                /////////////////////////////////////// End  Check Role Stduent Or Doctor ///////////////
-
-                    
-                if (doctorOrStudentRole == "Student")
-                {
-
-                   var countScheduledAppointments= await _context.Appointments
-                    .Where(a => a.PatientId == userId && a.Status == "Completed")
-                    .CountAsync();
-
-                        if (countScheduledAppointments > 3)
+                    var doctor = await _userManager.FindByIdAsync(appointt.DoctorId);
+                    if (doctor != null)
+                    {
+                        var roles = await _userManager.GetRolesAsync(doctor);
+                        if (roles.Contains("Student"))
                         {
-                        return StatusCode(StatusCodes.Status407ProxyAuthenticationRequired, new { StatusCode = 407, MessageEn = "The patient's free plan has already ended, please consult a doctor.", MessageAr = "الخطة المجانية للمريض قد انتهت بالفعل يرجى مراجعة طبيب." });
-                         }
-
+                            countStudentAppointments++;
+                        }
+                    }
                 }
+
+                if (countStudentAppointments > 3)
+                {
+                    return StatusCode(StatusCodes.Status407ProxyAuthenticationRequired, new { StatusCode = 407, MessageEn = "The patient's free plan has already ended, please consult a doctor.", MessageAr = "الخطة المجانية للمريض قد انتهت بالفعل يرجى مراجعة طبيب." });
+                }
+
 
 
                 // Convert the AppointmentDto to an Appointment entity
