@@ -7,6 +7,8 @@ using System;
 using System.Security.Claims;
 using SharedClassLibrary.Helper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace GraduationProjectApi.Controllers.Appointments
 {
@@ -15,10 +17,12 @@ namespace GraduationProjectApi.Controllers.Appointments
     public class CreateAppointmentController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CreateAppointmentController(AppDbContext context)
+        public CreateAppointmentController(AppDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -41,6 +45,41 @@ namespace GraduationProjectApi.Controllers.Appointments
                 if (checkScheduledStatus != null)
                 {
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { StatusCode = 406, MessageEn = "An existing scheduled appointment was found.", MessageAr = "تم العثور على موعد مجدول موجود بالفعل." });
+                }
+
+
+
+
+                ///////////////////////////////////////  Start Check Role Stduent Or Doctor ///////////////
+                var doctorOrStudent = await _userManager.FindByIdAsync(appointmentDto.DoctorId);
+                if (doctorOrStudent == null)
+                {
+                    return StatusCode(StatusCodes.Status402PaymentRequired, new { StatusCode = 402, MessageEn = "Doctor or student not found.", MessageAr = "لم يتم العثور على الطبيب أو الطالب." });
+                }
+
+                var roles = await _userManager.GetRolesAsync(doctorOrStudent);
+                var doctorOrStudentRole = roles.FirstOrDefault();
+
+                if (string.IsNullOrEmpty(doctorOrStudentRole))
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, new { StatusCode = 403, MessageEn = "Doctor or student role not found.", MessageAr = "لم يتم العثور على دور الطبيب أو الطالب." });
+                }
+
+                /////////////////////////////////////// End  Check Role Stduent Or Doctor ///////////////
+
+                    
+                if (doctorOrStudentRole == "Student")
+                {
+
+                   var countScheduledAppointments= await _context.Appointments
+                    .Where(a => a.PatientId == userId && a.Status == "Completed")
+                    .CountAsync();
+
+                        if (countScheduledAppointments > 3)
+                        {
+                        return StatusCode(StatusCodes.Status407ProxyAuthenticationRequired, new { StatusCode = 407, MessageEn = "The patient's free plan has already ended, please consult a doctor.", MessageAr = "الخطة المجانية للمريض قد انتهت بالفعل يرجى مراجعة طبيب." });
+                         }
+
                 }
 
 
