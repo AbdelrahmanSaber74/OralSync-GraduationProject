@@ -31,36 +31,37 @@ namespace GraduationProjectApi.Controllers.Doctor
         {
             try
             {
-                string hostUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+                IQueryable<GraduationProjectApi.Models.Doctor> doctorsQuery = _db.Doctors;
 
-                var doctorsQuery = _db.Doctors
-                    .Include(d => d.User)
-                    .Where(d => string.IsNullOrEmpty(governorate) || d.Governorate == governorate)
-                    .Select(d => new
-                    {
-                        Doctor = d,
-                        d.User.ProfileImage,
-                        d.User.Name,
-                        Ratings = _db.Ratings.Where(r => r.RatedUserId == d.UserId).Select(r => r.Value)
-                    });
+                if (!string.IsNullOrEmpty(governorate))
+                {
+                    doctorsQuery = doctorsQuery.Where(d => d.Governorate == governorate);
+                }
 
                 var doctorsList = await doctorsQuery.ToListAsync();
+                var doctorsWithRate = new List<object>();
+                string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
 
-                var doctorsWithRate = doctorsList
-                    .Select(d => new
+                foreach (var doctor in doctorsList)
+                {
+                    var averageRate = await CalculateAverageRate(doctor.UserId);
+                    if (averageRate >= minRate)
                     {
-                        Doctor = d.Doctor,
-                        ProfileImage = hostUrl + d.ProfileImage,
-                        d.Name,
-                        AverageRate = d.Ratings.Any() ? Math.Round(d.Ratings.Average(), 2) : 0
-                    })
-                    .Where(d => d.AverageRate >= minRate)
-                    .ToList();
+                        doctorsWithRate.Add(new
+                        {
+                            Doctor = doctor,
+                            profileImage = hosturl + _db.Users.Where(m => m.Id == doctor.UserId).Select(m => m.ProfileImage).FirstOrDefault(),
+                            Name = _db.Users.Where(m => m.Id == doctor.UserId).Select(m => m.Name).FirstOrDefault(),
+                            AverageRate = averageRate
+                        });
+                    }
+                }
 
                 return Ok(doctorsWithRate);
             }
             catch (Exception ex)
             {
+                // Log the exception for debugging
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     StatusCode = 500,
@@ -68,6 +69,16 @@ namespace GraduationProjectApi.Controllers.Doctor
                     MessageAr = "حدث خطأ أثناء تصفية الأطباء حسب المحافظة والتقييم."
                 });
             }
+        }
+
+        private async Task<double> CalculateAverageRate(string userId)
+        {
+            var ratedUserRatings = await _db.Ratings
+                .Where(r => r.RatedUserId == userId)
+                .Select(r => r.Value)
+                .ToListAsync();
+
+            return ratedUserRatings.Any() ? Math.Round(ratedUserRatings.Average(), 2) : 0;
         }
     }
 }

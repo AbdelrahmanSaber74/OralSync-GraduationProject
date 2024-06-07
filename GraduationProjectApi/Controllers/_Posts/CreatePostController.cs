@@ -43,6 +43,13 @@ namespace GraduationProjectApi.Controllers._Posts
                     return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
 
 
+                var countPost = _db.Posts.Where(m => m.UserId == userId && m.IsVisible == true).Count();
+
+                if (countPost > 10)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, new { StatusCode = 400, MessageEn = "User has exceeded the maximum allowed number of posts", MessageAr = "لقد تجاوز المستخدم العدد الأقصى المسموح به من المنشورات" });
+                }
+
                 // Generate new post ID
                 int postId = _db.Posts.OrderByDescending(p => p.PostId).Select(m => m.PostId).FirstOrDefault() + 1;
 
