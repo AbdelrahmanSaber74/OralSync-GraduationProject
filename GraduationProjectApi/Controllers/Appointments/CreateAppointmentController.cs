@@ -31,8 +31,18 @@ namespace GraduationProjectApi.Controllers.Appointments
 
                 if (string.IsNullOrEmpty(userId))
                 {
+
                     return BadRequest(new { StatusCode = 400, MessageEn = "User ID not found in claims.", MessageAr = "معرف المستخدم غير موجود في البيانات." });
                 }
+
+
+                var checkScheduledStatus = _context.Appointments.Where(m => m.PatientId == userId && m.Status == "Scheduled").FirstOrDefault();
+
+                if (checkScheduledStatus != null)
+                {
+                    return StatusCode(StatusCodes.Status406NotAcceptable, new { StatusCode = 406, MessageEn = "An existing scheduled appointment was found.", MessageAr = "تم العثور على موعد مجدول موجود بالفعل." });
+                }
+
 
                 // Convert the AppointmentDto to an Appointment entity
                 var appointment = new Appointment
