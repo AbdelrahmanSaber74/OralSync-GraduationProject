@@ -68,12 +68,15 @@ namespace GraduationProjectApi.Controllers.AccountController
 
             string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
             var profileImage = _db.Users.Where(m => m.Id == userId).Select(m => m.ProfileImage).FirstOrDefault();
+            double averageRate = await CalculateAverageRate(userId);
 
             return Ok(new
             {
                 userRole.Name,
                 userDetails,
-                profileImage = hosturl + profileImage
+                profileImage = hosturl + profileImage,
+                averageRate
+
             });
         }
 
@@ -122,6 +125,12 @@ namespace GraduationProjectApi.Controllers.AccountController
 
 
 
+        }
+        private async Task<double> CalculateAverageRate(string userId)
+        {
+            var ratedUserRatings = await _db.Ratings.Where(m => m.RatedUserId == userId).Select(m => m.Value).ToListAsync();
+
+            return ratedUserRatings.Any() ? Math.Round(ratedUserRatings.Average(), 2) : 0;
         }
 
 

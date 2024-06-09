@@ -51,7 +51,7 @@ namespace GraduationProjectApi.Controllers.Appointments
 
 
                 var appointments = await _context.Appointments
-                     .Where(a => a.PatientId == userId)
+                     .Where(a => a.PatientId == userId && a.Status == "Completed")
                      .ToListAsync();
 
                 int countStudentAppointments = 0;
@@ -69,7 +69,7 @@ namespace GraduationProjectApi.Controllers.Appointments
                     }
                 }
 
-                if (countStudentAppointments > 3)
+                if (countStudentAppointments >= 3)
                 {
                     return StatusCode(StatusCodes.Status407ProxyAuthenticationRequired, new { StatusCode = 407, MessageEn = "The patient's free plan has already ended, please consult a doctor.", MessageAr = "الخطة المجانية للمريض قد انتهت بالفعل يرجى مراجعة طبيب." });
                 }
