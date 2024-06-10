@@ -75,13 +75,15 @@ namespace GraduationProjectApi.Controllers.Appointments
                 }
 
 
+              //  var validStatuses = new[] { "Scheduled", "Completed", "Cancelled", "Waiting" };
+
 
                 // Convert the AppointmentDto to an Appointment entity
                 var appointment = new Appointment
                 {
                     DoctorId = appointmentDto.DoctorId,
                     PatientId = userId,
-                    Status = appointmentDto.Status,
+                    Status = "Waiting",
                     Location = appointmentDto.Location,
                     DateCreated = DateTimeHelper.FormatDate(DateTime.Now),
                     TimeCreated = DateTimeHelper.FormatTime(DateTime.Now),

@@ -5,6 +5,7 @@ using GraduationProjectApi.Models;
 using IdentityManagerServerApi.Data;
 using IdentityManagerServerApi.Models;
 using SharedClassLibrary.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GraduationProjectApi.Controllers.Appointments
 {
@@ -20,6 +21,7 @@ namespace GraduationProjectApi.Controllers.Appointments
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutAppointment(int id, [FromBody] AppointmentUpdateDto appointmentUpdateDto)
         {
             try

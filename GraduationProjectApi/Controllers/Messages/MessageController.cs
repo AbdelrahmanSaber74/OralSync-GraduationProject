@@ -1,5 +1,6 @@
 ﻿using GraduationProjectApi.Models;
 using IdentityManagerServerApi.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,8 @@ namespace GraduationProjectApi.Controllers.Messages
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class MessageController : ControllerBase
     {
         private readonly AppDbContext _db;

@@ -23,6 +23,7 @@ namespace GraduationProjectApi.Controllers
 
 
         [HttpPut]
+        [Authorize]
         public IActionResult Put([FromBody] ContactUsDTO contactUs)
         {
 

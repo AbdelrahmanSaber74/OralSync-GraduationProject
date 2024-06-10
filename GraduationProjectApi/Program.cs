@@ -1,4 +1,3 @@
-using GraduationProjectApi.Controllers.Chat;
 using IdentityManagerServerApi.Data;
 using IdentityManagerServerApi.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -99,7 +98,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHub<ChatHub>("/chatHub");
+//app.MapHub<ChatHub>("/chatHub");
     
 app.Run();
     

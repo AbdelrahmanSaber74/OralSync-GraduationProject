@@ -13,11 +13,11 @@ namespace GraduationProjectApi.Controllers.Appointments
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GetPatientAppointmentController : ControllerBase
+    public class GetWaitingScheduledDoctorAppointmentController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public GetPatientAppointmentController(AppDbContext context)
+        public GetWaitingScheduledDoctorAppointmentController(AppDbContext context)
         {
             _context = context;
         }
@@ -40,7 +40,7 @@ namespace GraduationProjectApi.Controllers.Appointments
             }
 
             var appointments = await _context.Appointments
-                .Where(m => m.PatientId == userId)
+                .Where(m => m.DoctorId == userId && (m.Status == "Waiting" || m.Status == "Scheduled"))
                 .Select(m => new
                 {
                     m.Id,
@@ -69,8 +69,8 @@ namespace GraduationProjectApi.Controllers.Appointments
                 return NotFound(new
                 {
                     StatusCode = 404,
-                    MessageEn = "Appointments not found.",
-                    MessageAr = "المواعيد غير موجودة."
+                    MessageEn = "Completed appointments not found.",
+                    MessageAr = "المواعيد المكتملة غير موجودة."
                 });
             }
 

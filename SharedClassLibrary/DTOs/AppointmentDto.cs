@@ -7,7 +7,6 @@ namespace SharedClassLibrary.DTOs
 
 
         public string DoctorId { get; set; }
-        public string Status { get; set; } // e.g., Scheduled, Completed, Cancelled
         public string Location { get; set; } // Location of the appointment
 
 
