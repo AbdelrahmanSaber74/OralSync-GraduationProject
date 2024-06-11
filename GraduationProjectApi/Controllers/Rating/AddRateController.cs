@@ -43,6 +43,17 @@ namespace GraduationProjectApi.Controllers.Rating
                     return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "Rated user not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
                 }
 
+
+                // Check if the rating already exists
+                var existingRating = _db.Ratings
+                    .FirstOrDefault(r => r.SenderUserId == SenderUserId && r.RatedUserId == Rating.RatedUserId);
+
+                if (existingRating != null)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, new { StatusCode = 409, MessageEn = "Rating already exists", MessageAr = "التقييم موجود بالفعل" });
+                }
+
+
                 // Create a new Rating entity
                 var newRating = new IdentityManagerServerApi.Models.Rating
                 {
