@@ -51,20 +51,20 @@ namespace IdentityManagerServerApi.Controllers.AccountController
 
             if (lastUserId == null)
             {
-                return StatusCode(StatusCodes.Status400BadRequest,new { StatusCode = 400 , MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم." });
+                return StatusCode(StatusCodes.Status400BadRequest, new { StatusCode = 400, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم." });
             }
 
             if (specialDTO.IsDoctor)
             {
-                AddDoctor(specialDTO,  lastUserId );
+                AddDoctor(specialDTO, lastUserId);
             }
             else if (specialDTO.IsStudent)
             {
-                AddStudent(specialDTO , lastUserId);
+                AddStudent(specialDTO, lastUserId);
             }
             else if (specialDTO.IsPatient)
             {
-                AddPatient(specialDTO, lastUserId );
+                AddPatient(specialDTO, lastUserId);
             }
 
             await _db.SaveChangesAsync();
@@ -97,11 +97,11 @@ namespace IdentityManagerServerApi.Controllers.AccountController
             return await _db.Users
                 .Where(n => n.Name != "Admin")
                 .OrderByDescending(u => u.TimeAddUser)
-                .Select(u => u.Id)  
+                .Select(u => u.Id)
                 .FirstOrDefaultAsync();
         }
 
-        private void AddDoctor(SpecialDTO specialDTO, string userId )
+        private void AddDoctor(SpecialDTO specialDTO, string userId)
         {
 
             var newDoctor = new Doctor
@@ -114,7 +114,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
                 UniversityName = specialDTO.UniversityName,
                 ClinicAddresses = specialDTO.ClinicAddress,
                 ClinicNumber = specialDTO.ClinicNumber,
-                GPA = specialDTO.GPA,   
+                GPA = specialDTO.GPA,
                 GraduationDate = specialDTO.GraduationDate,
                 BirthDate = specialDTO.BirthDate,
                 Certificates = specialDTO.Certificates,
@@ -126,7 +126,7 @@ namespace IdentityManagerServerApi.Controllers.AccountController
             _db.Doctors.Add(newDoctor);
         }
 
-        private void AddStudent(SpecialDTO specialDTO, string userId  )
+        private void AddStudent(SpecialDTO specialDTO, string userId)
         {
 
 

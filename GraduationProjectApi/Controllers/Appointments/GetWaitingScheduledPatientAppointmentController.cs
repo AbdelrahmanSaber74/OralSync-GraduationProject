@@ -69,10 +69,11 @@ namespace GraduationProjectApi.Controllers.Appointments
                 return NotFound(new
                 {
                     StatusCode = 404,
-                    MessageEn = "Completed appointments not found.",
-                    MessageAr = "المواعيد المكتملة غير موجودة."
+                    MessageEn = "No waiting or scheduled appointments found for this patient.",
+                    MessageAr = "لا توجد مواعيد في انتظار أو مجدولة لهذا المريض."
                 });
             }
+
 
             return Ok(appointments);
         }
