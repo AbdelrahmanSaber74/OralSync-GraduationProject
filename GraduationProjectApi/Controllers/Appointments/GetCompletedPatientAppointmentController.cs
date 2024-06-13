@@ -56,6 +56,7 @@ namespace GraduationProjectApi.Controllers.Appointments
                     m.DoctorNotes,
                     m.PaymentMethod,
                     m.Fee,
+                    m.isRating,
                     User = _context.Users.Where(u => u.Id == m.DoctorId).Select(u => new
                     {
                         u.Name,

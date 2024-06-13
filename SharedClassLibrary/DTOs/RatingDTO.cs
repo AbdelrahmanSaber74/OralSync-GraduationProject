@@ -12,5 +12,7 @@ namespace SharedClassLibrary.DTOs
         public int Value { get; set; } // Assuming the rating scale is from 1 to 5
 
         public string Comment { get; set; }
+        public int AppointmentId { get; set; } 
+
     }
 }

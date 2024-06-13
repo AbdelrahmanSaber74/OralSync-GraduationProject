@@ -31,6 +31,7 @@ namespace IdentityManagerServerApi.Models
         public string DoctorNotes { get; set; } // Notes added by the doctor
         public string PaymentMethod { get; set; } // e.g., Cash, Credit Card, Insurance
         public decimal Fee { get; set; } // Fee for the appointment
+        public bool isRating { get; set; } // isRating for the appointment
 
 
 

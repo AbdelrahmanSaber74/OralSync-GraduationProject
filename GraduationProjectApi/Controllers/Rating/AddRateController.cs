@@ -4,6 +4,7 @@ using SharedClassLibrary.Helper;
 using SharedClassLibrary.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Linq.Expressions;
 
 namespace GraduationProjectApi.Controllers.Rating
 {
@@ -42,6 +43,19 @@ namespace GraduationProjectApi.Controllers.Rating
                 {
                     return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "Rated user not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
                 }
+
+
+
+
+                // Update the appointment to indicate it has been rated
+                var appointment = _db.Appointments.FirstOrDefault(m => m.Id == Rating.AppointmentId);
+
+                if (appointment != null)
+                {
+                    appointment.isRating = true;
+                    await _db.SaveChangesAsync();
+                }
+
 
 
                 // Check if the rating already exists

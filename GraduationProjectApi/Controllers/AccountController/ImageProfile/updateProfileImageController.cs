@@ -37,7 +37,11 @@ namespace GraduationProjectApi.Controllers.AccountController.ImageProfile
                 if (user == null)
                     return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User not found.", MessageAr = "المستخدم غير موجود." });
 
+                // Use the original file name for the uploaded image
                 string filePath = GetFilePath(userId);
+                string imageFileName = Path.GetFileName(formFile.FileName);
+
+
 
                 if (!Directory.Exists(filePath))
                     Directory.CreateDirectory(filePath);
@@ -50,7 +54,7 @@ namespace GraduationProjectApi.Controllers.AccountController.ImageProfile
                 using (FileStream stream = System.IO.File.Create(imagePath))
                 {
                     await formFile.CopyToAsync(stream);
-                    user.ProfileImage = $"/Profile/{userId}/{userId}.png";
+                    user.ProfileImage = $"/Profile/{userId}/{imageFileName}.png";
                     await _db.SaveChangesAsync();
 
 
