@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GraduationProjectApi.Controllers.AccountController.ImageProfile
@@ -29,52 +31,66 @@ namespace GraduationProjectApi.Controllers.AccountController.ImageProfile
         [HttpPut]
         public async Task<IActionResult> UploadImage(IFormFile formFile)
         {
+            if (formFile == null || formFile.Length == 0)
+            {
+                return BadRequest(new { StatusCode = 400, MessageEn = "No file provided.", MessageAr = "لم يتم توفير أي ملف." });
+            }
+
+            var validImageTypes = new[] { "image/jpeg", "image/png", "image/gif" };
+            if (!validImageTypes.Contains(formFile.ContentType))
+            {
+                return BadRequest(new { StatusCode = 400, MessageEn = "Invalid file type.", MessageAr = "نوع الملف غير صالح." });
+            }
+
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
                 if (user == null)
-                    return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User not found.", MessageAr = "المستخدم غير موجود." });
+                {
+                    return NotFound(new { StatusCode = 404, MessageEn = "User not found.", MessageAr = "المستخدم غير موجود." });
+                }
 
-                // Use the original file name for the uploaded image
                 string filePath = GetFilePath(userId);
-                string imageFileName = Path.GetFileName(formFile.FileName);
-
-
-
                 if (!Directory.Exists(filePath))
+                {
                     Directory.CreateDirectory(filePath);
+                }
 
-                string imagePath = Path.Combine(filePath, $"{userId}.png");
+                // Sanitize the file name
+                string originalFileName = Path.GetFileName(formFile.FileName);
+                string sanitizedFileName = Regex.Replace(originalFileName.Trim(), @"[^a-zA-Z0-9_.-]", "_");
+
+                string imagePath = Path.Combine(filePath, sanitizedFileName);
 
                 if (System.IO.File.Exists(imagePath))
+                {
                     System.IO.File.Delete(imagePath);
+                }
 
-                using (FileStream stream = System.IO.File.Create(imagePath))
+                using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
                     await formFile.CopyToAsync(stream);
-                    user.ProfileImage = $"/Profile/{userId}/{imageFileName}.png";
-                    await _db.SaveChangesAsync();
-
-
-                    return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Profile image uploaded successfully.", MessageAr = "تم تحميل صورة الملف الشخصي بنجاح." });
-
                 }
+
+                user.ProfileImage = $"/Profile/{userId}/{sanitizedFileName}";
+                await _db.SaveChangesAsync();
+
+                return Ok(new { StatusCode = 200, MessageEn = "Profile image uploaded successfully.", MessageAr = "تم تحميل صورة الملف الشخصي بنجاح." });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, new { StatusCode = 400, MessageEn = $"Failed to upload profile image: {ex.Message}.", MessageAr = "فشل تحميل صورة الملف الشخصي." });
-
+                // Log the exception (ex) here using a logging framework
+                return BadRequest(new { StatusCode = 400, MessageEn = $"Failed to upload profile image: {ex.Message}", MessageAr = "فشل تحميل صورة الملف الشخصي." });
             }
         }
 
         private string GetFilePath(string userId)
         {
-            return Path.Combine(_environment.WebRootPath, $"Profile\\{userId}");
+            // Ensure the userId is safe to use in a path
+            var safeUserId = Path.GetInvalidFileNameChars().Aggregate(userId, (current, c) => current.Replace(c.ToString(), string.Empty));
+            return Path.Combine(_environment.WebRootPath, "Profile", safeUserId);
         }
-
-
-
     }
 }
