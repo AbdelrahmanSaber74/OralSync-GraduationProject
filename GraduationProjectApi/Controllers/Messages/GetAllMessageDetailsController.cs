@@ -35,11 +35,7 @@ namespace GraduationProjectApi.Controllers.Messages
             string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
 
 
-            //   .Where(m => (m.SenderId == SenderId && m.ReceiverId == ReceiverId) ||
-            //(m.SenderId == ReceiverId && m.ReceiverId == SenderId))
-
-
-                                var allMessages = await _db.Messages
+                     var allMessages = await _db.Messages
                     .Where(m => m.SenderId == userId || m.ReceiverId == userId)
                     .Join(_db.Users,
                     message => message.SenderId,
