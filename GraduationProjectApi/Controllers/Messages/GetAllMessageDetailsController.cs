@@ -35,33 +35,47 @@ namespace GraduationProjectApi.Controllers.Messages
             string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
 
 
-            var allMessages = await _db.Messages
-                .Join(_db.Users,
-                      message => message.SenderId,
-                      sender => sender.Id,
-                      (message, sender) => new { message, sender })
-                .Join(_db.Users,
-                      temp => temp.message.ReceiverId,
-                      receiver => receiver.Id,
-                      (temp, receiver) => new
-                      {
-                          temp.message.Id,
-                          Sender = new
-                          {
-                              Id = temp.sender.Id,
-                              ProfileImage = hosturl + temp.sender.ProfileImage
-                          },
-                          Receiver = new
-                          {
-                              Id = receiver.Id,
-                              ProfileImage = hosturl + receiver.ProfileImage
-                          }
-                      })
-                .ToListAsync();
+            //   .Where(m => (m.SenderId == SenderId && m.ReceiverId == ReceiverId) ||
+            //(m.SenderId == ReceiverId && m.ReceiverId == SenderId))
+
+
+                                var allMessages = await _db.Messages
+                    .Where(m => m.SenderId == userId || m.ReceiverId == userId)
+                    .Join(_db.Users,
+                    message => message.SenderId,
+                    sender => sender.Id,
+                    (message, sender) => new { message, sender })
+                    .Join(_db.Users,
+                    temp => temp.message.ReceiverId,
+                    receiver => receiver.Id,
+                    (temp, receiver) => new
+                    {
+                    MessageId = temp.message.Id,
+                    Sender = new
+                    {
+                      SenderId = temp.sender.Id,
+                      SenderName = temp.sender.Name,
+                      SenderProfileImage = hosturl + temp.sender.ProfileImage
+                    },
+                    Receiver = new
+                    {
+                      ReceiverId = receiver.Id,
+                      ReceiverName = receiver.Name,
+                      ReceiverProfileImage = hosturl + receiver.ProfileImage
+                    }
+                    })
+                    .ToListAsync();
+
+                var uniqueMessages = allMessages
+                    .GroupBy(x => new { x.Sender.SenderId, x.Receiver.ReceiverId })
+                    .Select(g => g.First())
+                    .ToList();
+
+
 
 
             // Assuming you want to return all messages
-            return Ok(allMessages);
+            return Ok(uniqueMessages);
         }
     }
 }

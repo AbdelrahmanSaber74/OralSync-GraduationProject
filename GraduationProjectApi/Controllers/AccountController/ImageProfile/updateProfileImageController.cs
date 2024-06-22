@@ -36,11 +36,11 @@ namespace GraduationProjectApi.Controllers.AccountController.ImageProfile
                 return BadRequest(new { StatusCode = 400, MessageEn = "No file provided.", MessageAr = "لم يتم توفير أي ملف." });
             }
 
-            var validImageTypes = new[] { "image/jpeg", "image/png", "image/gif" };
-            if (!validImageTypes.Contains(formFile.ContentType))
-            {
-                return BadRequest(new { StatusCode = 400, MessageEn = "Invalid file type.", MessageAr = "نوع الملف غير صالح." });
-            }
+            //var validImageTypes = new[] { "image/jpeg", "image/png", "image/gif" };
+            //if (!validImageTypes.Contains(formFile.ContentType))
+            //{
+            //    return BadRequest(new { StatusCode = 400, MessageEn = "Invalid file type.", MessageAr = "نوع الملف غير صالح." });
+            //}
 
             try
             {
