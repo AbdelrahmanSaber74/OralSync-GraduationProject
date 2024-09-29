@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using GraduationProjectApi.Models;
-
-namespace GraduationProjectApi.Repositories
+﻿namespace GraduationProjectApi.Repositories.IService.IPost
 {
     public interface IChangePostStatusService
     {
-        Task<Post> GetPostByIdAndUserAsync(int postId, string userId);
-        Task TogglePostVisibilityAsync(Post post);
+        Task<GraduationProjectApi.Models.Post> GetPostByIdAndUserAsync(int postId, string userId);
+        Task TogglePostVisibilityAsync(GraduationProjectApi.Models.Post post);
     }
 }

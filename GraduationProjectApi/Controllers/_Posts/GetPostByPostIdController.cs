@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using GraduationProjectApi.Services; // Include the namespace for your service
-using System;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using GraduationProjectApi.Repositories.IService.IPost;
 
 namespace GraduationProjectApi.Controllers.Posts
 {

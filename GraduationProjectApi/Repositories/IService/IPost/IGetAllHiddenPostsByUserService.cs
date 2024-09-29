@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace GraduationProjectApi.Services
+﻿namespace GraduationProjectApi.Repositories.IService.IPost
 {
     public interface IGetAllHiddenPostsByUserService
     {

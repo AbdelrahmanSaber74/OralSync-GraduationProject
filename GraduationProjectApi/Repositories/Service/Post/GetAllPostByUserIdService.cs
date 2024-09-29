@@ -1,11 +1,8 @@
-﻿using GraduationProjectApi.Models;
+﻿using GraduationProjectApi.Repositories.IService.IPost;
 using IdentityManagerServerApi.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace GraduationProjectApi.Services
+namespace GraduationProjectApi.Repositories.IService.Post
 {
     public class GetAllPostByUserIdService : IGetAllPostByUserIdService
     {

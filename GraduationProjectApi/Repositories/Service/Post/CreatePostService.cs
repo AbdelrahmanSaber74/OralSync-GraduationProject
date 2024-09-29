@@ -1,9 +1,6 @@
-﻿using GraduationProjectApi.Models;
-using GraduationProjectApi.Repositories;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
+﻿using GraduationProjectApi.Repositories.IService.IPost;
 
-namespace GraduationProjectApi.Services
+namespace GraduationProjectApi.Repositories.IService.Post
 {
     public class CreatePostService : ICreatePostService
     {
@@ -14,7 +11,7 @@ namespace GraduationProjectApi.Services
             _postRepository = postRepository;
         }
 
-        public async Task<Post> CreatePostAsync(string userId, string title, string content, IFormFileCollection fileCollection)
+        public async Task<GraduationProjectApi.Models.Post> CreatePostAsync(string userId, string title, string content, IFormFileCollection fileCollection)
         {
             return await _postRepository.CreatePostAsync(userId, title, content, fileCollection);
         }

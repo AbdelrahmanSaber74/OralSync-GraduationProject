@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using GraduationProjectApi.Services;
+using GraduationProjectApi.Repositories.IService.IPost;
 
 namespace GraduationProjectApi.Controllers._Posts
 {

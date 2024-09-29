@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using GraduationProjectApi.Services;
-using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
+using GraduationProjectApi.Repositories.IService.IPost;
 
 namespace GraduationProjectApi.Controllers._Posts
 {
@@ -14,7 +11,7 @@ namespace GraduationProjectApi.Controllers._Posts
     public class CreatePostController : ControllerBase
     {
         private readonly ICreatePostService _postService;
-
+        
         public CreatePostController(ICreatePostService postService)
         {
             _postService = postService ?? throw new ArgumentNullException(nameof(postService));

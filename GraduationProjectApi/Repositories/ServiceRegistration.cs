@@ -1,7 +1,5 @@
-﻿// Services/ServiceRegistration.cs
-using GraduationProjectApi.Repositories;
-using GraduationProjectApi.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using GraduationProjectApi.Repositories.IService.IPost;
+using GraduationProjectApi.Repositories.IService.Post;
 
 namespace YourNamespace.Services
 {

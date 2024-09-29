@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using GraduationProjectApi.Models;
+﻿using GraduationProjectApi.Repositories.IService.IPost;
 using IdentityManagerServerApi.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace GraduationProjectApi.Repositories
+namespace GraduationProjectApi.Repositories.IService.Post
 {
     public class ChangePostStatusService : IChangePostStatusService
     {
@@ -15,15 +13,17 @@ namespace GraduationProjectApi.Repositories
             _db = db;
         }
 
-        public async Task<Post> GetPostByIdAndUserAsync(int postId, string userId)
+        public async Task<GraduationProjectApi.Models.Post> GetPostByIdAndUserAsync(int postId, string userId)
         {
             return await _db.Posts.FirstOrDefaultAsync(p => p.PostId == postId && p.UserId == userId);
         }
 
-        public async Task TogglePostVisibilityAsync(Post post)
+        public async Task TogglePostVisibilityAsync(GraduationProjectApi.Models.Post post)
         {
             post.IsVisible = !post.IsVisible;
             await _db.SaveChangesAsync();
         }
+
+       
     }
 }

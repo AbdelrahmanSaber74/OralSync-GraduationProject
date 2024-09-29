@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace GraduationProjectApi.Services
+﻿namespace GraduationProjectApi.Repositories.IService.IPost
 {
     public interface IGetAllPostService
     {
