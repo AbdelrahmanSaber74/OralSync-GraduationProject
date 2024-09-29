@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using GraduationProjectApi.Models;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using IdentityManagerServerApi.Data;
+using System;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using GraduationProjectApi.Services;
 
 namespace GraduationProjectApi.Controllers.Posts
 {
@@ -16,18 +13,17 @@ namespace GraduationProjectApi.Controllers.Posts
     [Authorize]
     public class GetAllHiddenPostsByUserController : ControllerBase
     {
-        private readonly AppDbContext _db;
+        private readonly IGetAllHiddenPostsByUserService _hiddenPostsService;
 
-        public GetAllHiddenPostsByUserController(AppDbContext db)
+        public GetAllHiddenPostsByUserController(IGetAllHiddenPostsByUserService hiddenPostsService)
         {
-            _db = db ?? throw new ArgumentNullException(nameof(db));
+            _hiddenPostsService = hiddenPostsService ?? throw new ArgumentNullException(nameof(hiddenPostsService));
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -36,40 +32,7 @@ namespace GraduationProjectApi.Controllers.Posts
 
             var hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
-            var posts = await _db.Posts
-                .Where(m => m.IsVisible == false && m.UserId == userId)
-                .Include(post => post.User)
-                .OrderByDescending(p => p.PostId)
-                .Select(post => new
-                {
-                    post.PostId,
-                    UserName = post.User.Name,
-                    ProfileImage = hostUrl + post.User.ProfileImage,
-                    post.Title,
-                    post.Content,
-                    post.DateCreated,
-                    post.DateUpdated,
-                    post.TimeCreated,
-                    post.TimeUpdated,
-                    post.UserId,
-                    LikeCount = post.Likes.Count,
-                    PostImages = post.Image.Select(image => hostUrl + image).ToList(),
-                    Comments = post.Comments.Select(comment => new
-                    {
-                        comment.CommentId,
-                        comment.User.Name,
-                        comment.Content,
-                        comment.Title,
-                        comment.DateCreated,
-                        comment.TimeCreated,
-                        comment.DateUpdated,
-                        comment.TimeUpdated,
-                        comment.UserId,
-                        comment.PostId,
-                        ProfileImage = hostUrl + comment.User.ProfileImage,
-                    }).ToList()
-                })
-                .ToListAsync();
+            var posts = await _hiddenPostsService.GetHiddenPostsByUserAsync(userId, hostUrl);
 
             return Ok(posts);
         }

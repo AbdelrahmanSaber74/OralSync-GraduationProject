@@ -1,3 +1,4 @@
+using GraduationProjectApi.Repositories;
 using IdentityManagerServerApi.Data;
 using IdentityManagerServerApi.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using SharedClassLibrary.Contracts;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+using YourNamespace.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +20,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
- 
+
+// Call your new service registration method
+builder.Services.AddApplicationServices();
+
 //Starting
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

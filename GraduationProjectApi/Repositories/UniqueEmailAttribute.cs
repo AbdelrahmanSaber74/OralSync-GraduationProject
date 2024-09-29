@@ -20,11 +20,7 @@ public class UniqueEmailAttribute : ValidationAttribute
 
     private bool IsEmailUnique(string email)
     {
-        // Implement your logic to check if the email is unique in the database.
-        // Return true if unique, false otherwise.
-        // You might want to query your database or use some other mechanism to check uniqueness.
-        // Replace this with your actual logic.
-
+      
         // Example: Assuming a static list for simplicity.
         var existingEmails = new List<string> { "existing@email.com" };
 

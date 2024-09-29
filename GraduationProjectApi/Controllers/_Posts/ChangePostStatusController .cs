@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using GraduationProjectApi.Models;
-using System;
-using System.Linq;
-using IdentityManagerServerApi.Data;
 using Microsoft.AspNetCore.Authorization;
+using GraduationProjectApi.Repositories;
+using System;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace GraduationProjectApi.Controllers._Posts
 {
@@ -15,17 +13,15 @@ namespace GraduationProjectApi.Controllers._Posts
     [Authorize(Roles = "Admin, Doctor, Student")]
     public class ChangePostStatusController : ControllerBase
     {
-        private readonly AppDbContext _db;
+        private readonly IChangePostStatusService _postRepository;
 
-        public ChangePostStatusController(AppDbContext db)
+        public ChangePostStatusController(IChangePostStatusService postRepository)
         {
-            _db = db ?? throw new ArgumentNullException(nameof(db));
+            _postRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
         }
 
-
-
         [HttpPut]
-        public IActionResult ChangeStatus(int postId)
+        public async Task<IActionResult> ChangeStatus(int postId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -34,24 +30,19 @@ namespace GraduationProjectApi.Controllers._Posts
                 return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
             }
 
-            // Retrieve the post from the database
-            var post = _db.Posts.FirstOrDefault(p => p.PostId == postId && p.UserId == userId);
+            var post = await _postRepository.GetPostByIdAndUserAsync(postId, userId);
 
             if (post == null)
             {
                 return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "Post not found", MessageAr = "لم يتم العثور على المنشور" });
             }
 
-            // Toggle the post visibility status
-            post.IsVisible = !post.IsVisible;
-
-            _db.SaveChanges();
+            await _postRepository.TogglePostVisibilityAsync(post);
 
             string statusMessageEn = post.IsVisible ? "Post is now visible" : "Post is now hidden";
             string statusMessageAr = post.IsVisible ? "المنشور مرئي الآن" : "المنشور مخفي الآن";
 
             return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = statusMessageEn, MessageAr = statusMessageAr });
         }
-
     }
 }
