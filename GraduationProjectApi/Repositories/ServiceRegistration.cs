@@ -53,6 +53,10 @@ namespace YourNamespace.Services
             services.AddScoped<IFilterDoctorsByGovernorateAndRateService, FilterDoctorsByGovernorateAndRateService>();
             services.AddScoped<IUpdateProfileDoctorService, UpdateProfileDoctorService>();
 
+            // Like Services
+            services.AddScoped<IAddLikeService, AddLikeService>();
+
+
             // Add other services here as needed
         }
     }
