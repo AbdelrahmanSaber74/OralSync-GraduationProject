@@ -1,6 +1,8 @@
-﻿using GraduationProjectApi.Repositories.IService.Appointments;
+﻿using GraduationProjectApi.Repositories.IService;
+using GraduationProjectApi.Repositories.IService.Appointments;
 using GraduationProjectApi.Repositories.IService.IPost;
 using GraduationProjectApi.Repositories.IService.Post;
+using GraduationProjectApi.Repositories.Service;
 using GraduationProjectApi.Repositories.Service.Appointments;
 using IdentityManagerServerApi.Repositories;
 using SharedClassLibrary.Contracts;
@@ -39,6 +41,8 @@ namespace YourNamespace.Services
             services.AddScoped<IUpdateAppointmentService, UpdateAppointmentService>();
 
 
+            // Comment Services
+            services.AddScoped<IAddCommentService, AddCommentService>();
 
             // Add other services here as needed
         }

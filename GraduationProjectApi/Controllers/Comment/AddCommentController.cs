@@ -1,17 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GraduationProjectApi.Models;
-using IdentityManagerServerApi.Data;
-using IdentityManagerServerApi.Models;
 using SharedClassLibrary.DTOs;
-using SharedClassLibrary.Helper;
-using System;
-using System.Linq;
 using System.Security.Claims;
-using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
-using System.Text.Json.Serialization;
-using System.Collections.Immutable;
+using GraduationProjectApi.Repositories.IService;
 
 namespace GraduationProjectApi.Controllers
 {
@@ -19,12 +12,11 @@ namespace GraduationProjectApi.Controllers
     [ApiController]
     public class AddCommentController : ControllerBase
     {
-        private readonly AppDbContext _db;
+        private readonly IAddCommentService _addCommentService;
 
-        public AddCommentController(AppDbContext db)
+        public AddCommentController(IAddCommentService addCommentService)
         {
-            _db = db ?? throw new ArgumentNullException(nameof(db));
-          
+            _addCommentService = addCommentService ?? throw new ArgumentNullException(nameof(addCommentService));
         }
 
         [HttpPost]
@@ -32,88 +24,34 @@ namespace GraduationProjectApi.Controllers
         public IActionResult AddComment(CommentDTO commentDto)
         {
             try
-
             {
-
-                var hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var userName = User.FindFirst(ClaimTypes.Name)?.Value;
-                var profileImage = _db.Users.Where(m => m.Id == userId).Select(m => m.ProfileImage).FirstOrDefault();
-
-              
 
                 if (string.IsNullOrEmpty(userId))
-                    return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
+                    return NotFound(new { StatusCode = 404, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
 
-                var post = _db.Posts.FirstOrDefault(m => m.PostId == commentDto.PostId);
-
+                var post = _addCommentService.GetPostById(commentDto.PostId);
                 if (post == null)
-                    return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "Post not found", MessageAr = "لم يتم العثور على المنشور" });
+                    return NotFound(new { StatusCode = 404, MessageEn = "Post not found", MessageAr = "لم يتم العثور على المنشور" });
 
-                var comment = new Comment
+                var comment = _addCommentService.AddComment(commentDto, userId, userName);
+
+                var hostUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+                var profileImage = _addCommentService.GetUserProfileImage(userId); // Use the service method
+
+                var response = new
                 {
-                    UserId = userId,
-                    Name = userName,
-                    PostId = commentDto.PostId,
-                    Content = commentDto.Content,
-                    Title = commentDto.Title,
-                    DateCreated = DateTimeHelper.FormatDate(DateTime.Now),
-                    TimeCreated = DateTimeHelper.FormatTime(DateTime.Now),
-                    DateUpdated = "",
-                    TimeUpdated = ""
+                    comment.CommentId,
+                    comment.Name,
+                    comment.Content,
+                    comment.Title,
+                    comment.DateCreated,
+                    comment.TimeCreated,
+                    ProfileImage = string.IsNullOrEmpty(profileImage) ? null : hostUrl + profileImage
                 };
 
-
-                _db.Comments.Add(comment);
-                _db.SaveChanges();
-
-
-                var notification = new Notification
-                {
-                    UserId = post.UserId,
-                    SenderUserId = userId,
-                    PostId = commentDto.PostId,
-                    Type = NotificationType.Comment,
-                    DateCreated = DateTimeHelper.FormatDate(DateTime.Now),
-                    TimeCreated = DateTimeHelper.FormatTime(DateTime.Now),
-                };
-
-                _db.Notifications.Add(notification);
-                _db.SaveChanges();
-
-                var lastComment = _db.Comments
-               .OrderByDescending(c => c.CommentId)
-               .FirstOrDefault();
-
-
-
-                if (lastComment != null)
-                {
-                    var response = new
-                    {
-                        lastComment.CommentId,
-                        lastComment.Name,
-                        lastComment.Content,
-                        lastComment.Title,
-                        lastComment.DateCreated,
-                        lastComment.TimeCreated,
-                        lastComment.DateUpdated,
-                        lastComment.TimeUpdated,
-                        lastComment.UserId,
-                        lastComment.PostId,
-                        ProfileImage = hostUrl + profileImage
-                    };
-
-                    return Ok(response);
-                }
-
-
-
-                else
-                {
-                    return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "No comments found", MessageAr = "لم يتم العثور على تعليقات" });
-                }
+                return Ok(response);
             }
             catch (Exception ex)
             {
