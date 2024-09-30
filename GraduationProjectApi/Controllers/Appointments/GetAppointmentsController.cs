@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using GraduationProjectApi.Models;
-using IdentityManagerServerApi.Data;
-using IdentityManagerServerApi.Models;
 using Microsoft.AspNetCore.Authorization;
+using GraduationProjectApi.Repositories.IService.Appointments;
+using IdentityManagerServerApi.Models;
 
 namespace GraduationProjectApi.Controllers.Appointments
 {
@@ -13,18 +9,19 @@ namespace GraduationProjectApi.Controllers.Appointments
     [ApiController]
     public class GetAppointmentsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IGetAppointmentsService _getAppointmentsService;
 
-        public GetAppointmentsController(AppDbContext context)
+        public GetAppointmentsController(IGetAppointmentsService getAppointmentsService)
         {
-            _context = context;
+            _getAppointmentsService = getAppointmentsService;
         }
 
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointments()
         {
-            return await _context.Appointments.ToListAsync();
+            var appointments = await _getAppointmentsService.GetAllAppointmentsAsync();
+            return Ok(appointments);
         }
     }
 }

@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
-using GraduationProjectApi.Models;
-using IdentityManagerServerApi.Data;
-using IdentityManagerServerApi.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using GraduationProjectApi.Repositories.IService.Appointments;
 
 namespace GraduationProjectApi.Controllers.Appointments
 {
@@ -15,11 +11,11 @@ namespace GraduationProjectApi.Controllers.Appointments
     [ApiController]
     public class GetCompletedPatientAppointmentController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IGetCompletedPatientAppointmentService _completedPatientAppointmentService;
 
-        public GetCompletedPatientAppointmentController(AppDbContext context)
+        public GetCompletedPatientAppointmentController(IGetCompletedPatientAppointmentService completedPatientAppointmentService)
         {
-            _context = context;
+            _completedPatientAppointmentService = completedPatientAppointmentService;
         }
 
         [HttpGet]
@@ -27,7 +23,7 @@ namespace GraduationProjectApi.Controllers.Appointments
         public async Task<ActionResult<IEnumerable<object>>> Get()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+            string hostUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
 
             if (userId == null)
             {
@@ -39,31 +35,7 @@ namespace GraduationProjectApi.Controllers.Appointments
                 });
             }
 
-            var appointments = await _context.Appointments
-                .Where(m => m.PatientId == userId && m.Status == "Completed")
-                .Select(m => new
-                {
-                    m.Id,
-                    m.DoctorId,
-                    m.PatientId,
-                    m.DateCreated,
-                    m.TimeCreated,
-                    m.DateAppointment,
-                    m.TimeAppointment,
-                    m.Status,
-                    m.Location,
-                    m.PatientNotes,
-                    m.DoctorNotes,
-                    m.PaymentMethod,
-                    m.Fee,
-                    m.isRating,
-                    User = _context.Users.Where(u => u.Id == m.DoctorId).Select(u => new
-                    {
-                        u.Name,
-                        ProfileImage = hosturl + u.ProfileImage
-                    }).FirstOrDefault()
-                })
-                .ToListAsync();
+            var appointments = await _completedPatientAppointmentService.GetCompletedAppointmentsAsync(userId, hostUrl);
 
             if (appointments == null || !appointments.Any())
             {

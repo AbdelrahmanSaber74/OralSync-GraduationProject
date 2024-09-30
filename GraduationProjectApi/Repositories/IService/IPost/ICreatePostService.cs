@@ -1,4 +1,6 @@
-﻿namespace GraduationProjectApi.Repositories.IService.IPost
+﻿using GraduationProjectApi.Models;
+
+namespace GraduationProjectApi.Repositories.IService.IPost
 {
     public interface ICreatePostService
     {

@@ -11,7 +11,7 @@ namespace GraduationProjectApi.Controllers._Posts
     public class CreatePostController : ControllerBase
     {
         private readonly ICreatePostService _postService;
-        
+
         public CreatePostController(ICreatePostService postService)
         {
             _postService = postService ?? throw new ArgumentNullException(nameof(postService));

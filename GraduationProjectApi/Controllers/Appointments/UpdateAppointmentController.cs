@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using GraduationProjectApi.Models;
-using IdentityManagerServerApi.Data;
-using IdentityManagerServerApi.Models;
 using SharedClassLibrary.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using GraduationProjectApi.Repositories.IService.Appointments;
+using Microsoft.EntityFrameworkCore;
 
 namespace GraduationProjectApi.Controllers.Appointments
 {
@@ -13,11 +11,11 @@ namespace GraduationProjectApi.Controllers.Appointments
     [ApiController]
     public class UpdateAppointmentController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IUpdateAppointmentService _updateAppointmentService;
 
-        public UpdateAppointmentController(AppDbContext context)
+        public UpdateAppointmentController(IUpdateAppointmentService updateAppointmentService)
         {
-            _context = context;
+            _updateAppointmentService = updateAppointmentService;
         }
 
         [HttpPut("{id}")]
@@ -26,30 +24,18 @@ namespace GraduationProjectApi.Controllers.Appointments
         {
             try
             {
-                var appointment = await _context.Appointments.FindAsync(id);
+                var isUpdated = await _updateAppointmentService.UpdateAppointmentAsync(id, appointmentUpdateDto);
 
-                if (appointment == null)
+                if (!isUpdated)
                 {
                     return NotFound(new { StatusCode = 404, MessageEn = "Appointment not found.", MessageAr = "الموعد غير موجود." });
                 }
 
-                // Validate the status value
-                var validStatuses = new[] { "Scheduled", "Completed", "Cancelled" };
-                if (!validStatuses.Contains(appointmentUpdateDto.Status))
-                {
-                    return BadRequest(new { StatusCode = 400, MessageEn = "Invalid status value.", MessageAr = "قيمة الحالة غير صالحة." });
-                }
-
-                // Update appointment properties
-                appointment.Status = appointmentUpdateDto.Status;
-                appointment.PatientNotes = appointmentUpdateDto.PatientNotes;
-                appointment.DoctorNotes = appointmentUpdateDto.DoctorNotes;
-                appointment.TimeAppointment = appointmentUpdateDto.TimeAppointment;
-                appointment.DateAppointment = appointmentUpdateDto.DateAppointment;
-
-                await _context.SaveChangesAsync();
-
                 return Ok(new { StatusCode = 200, MessageEn = "Appointment updated successfully.", MessageAr = "تم تحديث الموعد بنجاح." });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { StatusCode = 400, MessageEn = ex.Message, MessageAr = "قيمة الحالة غير صالحة." });
             }
             catch (DbUpdateConcurrencyException)
             {
