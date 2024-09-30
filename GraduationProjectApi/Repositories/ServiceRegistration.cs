@@ -64,6 +64,12 @@ namespace YourNamespace.Services
             // Notification Services
             services.AddScoped<INotificationService, NotificationService>();
 
+            // Patient Services
+            services.AddScoped<IUpdateProfilePatientService, UpdateProfilePatientService>();
+
+
+
+
             // Add other services here as needed
         }
     }
