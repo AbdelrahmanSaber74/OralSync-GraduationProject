@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Linq;
-using GraduationProjectApi.Models;
-using IdentityManagerServerApi.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharedClassLibrary.DTOs;
-using SharedClassLibrary.Helper;
+using GraduationProjectApi.Services;
 
 namespace GraduationProjectApi.Controllers
 {
@@ -14,45 +11,31 @@ namespace GraduationProjectApi.Controllers
     [ApiController]
     public class SaveContactUsController : ControllerBase
     {
-        private readonly AppDbContext _db;
+        private readonly ISaveContactUsService _contactUsService;
 
-        public SaveContactUsController(AppDbContext db)
+        public SaveContactUsController(ISaveContactUsService contactUsService)
         {
-            _db = db ?? throw new ArgumentNullException(nameof(db));
+            _contactUsService = contactUsService ?? throw new ArgumentNullException(nameof(contactUsService));
         }
-
 
         [HttpPut]
         [Authorize]
         public IActionResult Put([FromBody] ContactUsDTO contactUs)
         {
-
-         
             if (contactUs == null)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, new { StatusCode = 400, MessageEn = "Invalid contact form data", MessageAr = "بيانات الرسالة غير صالحة" });
-
             }
 
-            var newRequest = new ContactUs
+            try
             {
-                FullName = contactUs.FullName,
-                Email = contactUs.Email,
-                PhoneNumber = contactUs.PhoneNumber,
-                Message = contactUs.Message,
-                DateCreated = DateTimeHelper.FormatDate(DateTime.Now),
-                TimeCreated = DateTimeHelper.FormatTime(DateTime.Now),
-
-            };
-
-
-            _db.Add(newRequest);
-            _db.SaveChanges();
-
-            return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Contact form submitted successfully", MessageAr = "تم حفظ الرسالة بنجاح" });
+                _contactUsService.SubmitContactUs(contactUs);
+                return StatusCode(StatusCodes.Status200OK, new { StatusCode = 200, MessageEn = "Contact form submitted successfully", MessageAr = "تم حفظ الرسالة بنجاح" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { StatusCode = 500, MessageEn = $"Internal Server Error: {ex.Message}", MessageAr = "حدث خطأ داخلي في الخادم" });
+            }
         }
-
-
-
     }
 }
