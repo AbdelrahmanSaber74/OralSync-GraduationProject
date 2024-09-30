@@ -1,54 +1,33 @@
-﻿using GraduationProjectApi.Models;
-using IdentityManagerServerApi.Data;
+﻿using GraduationProjectApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SharedClassLibrary.Helper;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace GraduationProjectApi.Controllers.Messages
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class AddMessageController : ControllerBase
     {
-        private readonly AppDbContext _db;
+        private readonly IAddMessageService _messageService;
 
-        public AddMessageController(AppDbContext db)
+        public AddMessageController(IAddMessageService messageService)
         {
-            _db = db;
+            _messageService = messageService;
         }
-
 
         [HttpPost]
         [Authorize(Roles = "Patient")]
-        public async Task<IActionResult> Post(string ReceiverId)
+        public async Task<IActionResult> Post(string receiverId)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            if (string.IsNullOrEmpty(userId))
+                return StatusCode(StatusCodes.Status404NotFound, new { StatusCode = 404, MessageEn = "User ID not found", MessageAr = "لم يتم العثور على معرف المستخدم" });
 
-            Message message = new Message()
-            {
-                SenderId = userId,
-                ReceiverId = ReceiverId,
-                DateCreated = DateTimeHelper.FormatDate(DateTime.Now),
-                TimeCreated = DateTimeHelper.FormatTime(DateTime.Now),
-            };
-
-            _db.Messages.Add(message);
-            await _db.SaveChangesAsync();
-
-            return Ok(new
-            {
-                StatusCode = StatusCodes.Status200OK,
-                MessageEn = "Record saved successfully",
-                MessageAr = "تم الحفظ بنجاح"
-            });
-
+            return await _messageService.SendMessageAsync(receiverId, userId);
         }
-
-
     }
 }

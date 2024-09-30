@@ -1,4 +1,5 @@
-﻿using GraduationProjectApi.Repositories.IService;
+﻿using GraduationProjectApi.Repositories;
+using GraduationProjectApi.Repositories.IService;
 using GraduationProjectApi.Repositories.IService.Appointments;
 using GraduationProjectApi.Repositories.IService.IPost;
 using GraduationProjectApi.Repositories.IService.Post;
@@ -55,6 +56,10 @@ namespace YourNamespace.Services
 
             // Like Services
             services.AddScoped<IAddLikeService, AddLikeService>();
+
+            // Messages Services
+            services.AddScoped<IAddMessageService, AddMessageService>();
+            services.AddScoped<IGetAllMessageDetailsService, GetAllMessageDetailsService>();
 
 
             // Add other services here as needed
