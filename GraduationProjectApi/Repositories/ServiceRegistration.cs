@@ -49,6 +49,10 @@ namespace YourNamespace.Services
             // ContactUs Services
             services.AddScoped<ISaveContactUsService, SaveContactUsService>();
 
+            // Doctor Services
+            services.AddScoped<IFilterDoctorsByGovernorateAndRateService, FilterDoctorsByGovernorateAndRateService>();
+            services.AddScoped<IUpdateProfileDoctorService, UpdateProfileDoctorService>();
+
             // Add other services here as needed
         }
     }
