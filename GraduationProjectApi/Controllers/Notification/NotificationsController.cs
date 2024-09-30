@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GraduationProjectApi.Models;
-using System;
-using System.Linq;
-using IdentityManagerServerApi.Data;
+using GraduationProjectApi.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using System.Collections.Generic;
 
 namespace GraduationProjectApi.Controllers._Posts
 {
@@ -15,16 +12,15 @@ namespace GraduationProjectApi.Controllers._Posts
     [Authorize]
     public class NotificationsController : ControllerBase
     {
-        private readonly AppDbContext _db;
+        private readonly INotificationService _notificationservice;
 
-        public NotificationsController(AppDbContext db)
+        public NotificationsController(INotificationService notificationservice)
         {
-            _db = db ?? throw new ArgumentNullException(nameof(db));
+            notificationservice = _notificationservice;
         }
 
-
         [HttpGet]
-        public IActionResult GetNotifications()
+        public async Task<IActionResult> GetNotifications()
         {
             // Get the user ID from the claims
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -36,25 +32,8 @@ namespace GraduationProjectApi.Controllers._Posts
 
             try
             {
-                // Query the database for notifications for the current user
-                var notifications = _db.Notifications
-                     .Where(n => n.UserId == userId)
-                     .Join(
-                         _db.Users,
-                         notification => notification.SenderUserId,
-                         user => user.Id,
-                         (notification, user) => new
-                         {
-                             notification.NotificationId,
-                             Sender = user.Name, 
-                             notification.PostId,
-                             Type = notification.Type.ToString(),
-                             notification.IsRead,
-                             notification.DateCreated,
-                             notification.TimeCreated
-                         })
-                         .ToList();
-
+                // Fetch notifications using the repository
+                var notifications = await _notificationservice.GetUserNotificationsAsync(userId);
 
                 return Ok(notifications);
             }

@@ -61,6 +61,8 @@ namespace YourNamespace.Services
             services.AddScoped<IAddMessageService, AddMessageService>();
             services.AddScoped<IGetAllMessageDetailsService, GetAllMessageDetailsService>();
 
+            // Notification Services
+            services.AddScoped<INotificationService, NotificationService>();
 
             // Add other services here as needed
         }

@@ -38,9 +38,7 @@
 
   <ItemGroup>
     <Folder Include="Repositories\IService\NewFolder - Copy %282%29\" />
-    <Folder Include="Repositories\IService\NewFolder - Copy\" />
     <Folder Include="Repositories\Service\NewFolder - Copy %282%29\" />
-    <Folder Include="Repositories\Service\NewFolder - Copy\" />
   </ItemGroup>
 
 </Project>
